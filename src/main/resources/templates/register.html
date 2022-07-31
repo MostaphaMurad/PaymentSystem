@@ -47,6 +47,10 @@
     <ul >
         <li ><a th:href="@{/}">Home</a></li>
         <li ><a th:href="@{/student/register}">New Registration</a></li>
+        <li sec:authorize="hasAuthority('ADMIN')" ><a th:href="@{/admin}">Administrator</a></li>
+        <li sec:authorize="hasAnyAuthority('ADMIN','ACCOUNTANT')">
+            <a th:href="@{/accountant}">Accountant Home Page</a>
+        </li>
         <li ><a th:href="@{#}">Contact us</a></li>
         <li th:ref="navbar-item" sec:authorize="!isAuthenticated()">
             <a th:href="@{/login}">Login</a>
@@ -61,43 +65,43 @@
         <input hidden type="text" name="id" th:field="*{id}" >
         <p>
             <label for="email">E-mail</label>
-            <input class="form-control-sm ml-3" size="50" id="email" type="email" th:field="*{email}" placeholder="E-mail"><br>
+            <input required class="form-control-sm ml-3" size="50" id="email" type="email" th:field="*{email}" placeholder="E-mail"><br>
         </p>
         <p>
             <label for="password">Password</label>
-            <input  class="form-control-sm mr-2" id="password" type="password" size="50" th:field="*{password}" placeholder="Password" ><br>
+            <input required  class="form-control-sm mr-2" id="password" type="password" size="50" th:field="*{password}" placeholder="Password" ><br>
         </p>
         <p>
             <label for="firstname">FirstName</label>
-           <input  class="form-control-sm mr-3" id="firstname" type="text" size="50" th:field="*{fname}" placeholder="First Name" ><br>
+           <input required  class="form-control-sm mr-3" id="firstname" type="text" size="50" th:field="*{fname}" placeholder="First Name" ><br>
         </p>
         <p>
             <label for="lastname">LastName</label>
-            <input  class="form-control-sm mr-3" id="lastname" type="text" size="50" th:field="*{lname}" placeholder="Last Name" ><br>
+            <input required  class="form-control-sm mr-3" id="lastname" type="text" size="50" th:field="*{lname}" placeholder="Last Name" ><br>
         </p>
         <p>
             <label for="fathername">FatherName</label>
-            <input  class="form-control-sm mr-5" id="fathername" type="text" size="50" th:field="*{fatherName}" placeholder="father Name" ><br>
+            <input required  class="form-control-sm mr-5" id="fathername" type="text" size="50" th:field="*{fatherName}" placeholder="father Name" ><br>
         </p>
         <p>
             <label for="mothername">MotherName</label>
-           <input  class="form-control-sm mr-5"  type="text" id="mothername" size="50" th:field="*{motherName}" placeholder="Mother Name" ><br>
+           <input required  class="form-control-sm mr-5"  type="text" id="mothername" size="50" th:field="*{motherName}" placeholder="Mother Name" ><br>
         </p>
         <p>
             <label for="birthdate">Birth-Date</label>
-            <input  class="form-control-sm mr-5" id="birthdate" type="date" size="50" th:value="*{date}" th:field="*{date}" placeholder="Your Birth date" ><br>
+            <input required  class="form-control-sm mr-5" id="birthdate" type="date" size="50" th:value="*{date}" th:field="*{date}" placeholder="Your Birth date" ><br>
         </p>
         <p>
             <label for="joineddate">Join-date</label>
-            <input  class="form-control-sm mr-5" id="joineddate" type="date" size="50" th:value="*{joinedDate}" th:field="*{joinedDate}" placeholder="Your Join date" ><br>
+            <input required  class="form-control-sm mr-5" id="joineddate" type="date" size="50" th:value="*{joinedDate}" th:field="*{joinedDate}" placeholder="Your Join date" ><br>
         </p>
         <p>
             <label for="mobile">Mobile</label>
-            <input  class="form-control-sm mr-5"  id="mobile" type="text" size="50" th:field="*{mobile}" placeholder="Phone Number" ><br>
+            <input required  class="form-control-sm mr-5"  id="mobile" type="text" size="50" th:field="*{mobile}" placeholder="Phone Number" ><br>
 
         </p>
         <label for="branches">Choose Branch</label>
-        <select name="branch" id="branches">
+        <select required name="branch" id="branches">
             <th:block th:each="b:${branches}">
                 <option th:value="${b.name}" th:field="*{branch}">[[${b.name}]]</option>
             </th:block>

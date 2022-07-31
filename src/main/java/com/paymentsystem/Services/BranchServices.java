@@ -13,4 +13,15 @@ public class BranchServices {
     public List<Branch> getAllBranches() {
         return branchRepository.findAll();
     }
+
+    public Branch addNewBranch(Branch branch) {
+        List<Branch> branches=branchRepository.findAll();
+        for(Branch B:branches){
+            if(B.getName().equals(branch.getName())){
+                return null;
+            }
+        }
+        Branch added=branchRepository.save(branch);
+        return added;
+    }
 }

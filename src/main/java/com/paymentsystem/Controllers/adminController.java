@@ -1,5 +1,4 @@
 package com.paymentsystem.Controllers;
-
 import com.paymentsystem.Models.Accountant;
 import com.paymentsystem.Models.Branch;
 import com.paymentsystem.Models.Roles;
@@ -20,7 +19,6 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.ArrayList;
 import java.util.List;
-
 @Controller
 @RequestMapping({"/","/admin"})
 public class adminController {
@@ -32,6 +30,7 @@ public class adminController {
     public String adminHome(Model model){
         List<Branch>branches=branchServices.getAllBranches();
         model.addAttribute("branches",branches);
+        model.addAttribute("branch",new Branch());
         return "adminpage";
     }
     @PostMapping("/admin/find")
@@ -41,6 +40,7 @@ public class adminController {
         model.addAttribute("stds",students);
         model.addAttribute("accs",accountants);
         model.addAttribute("branch",branch);
+        model.addAttribute("branch",new Branch());
         return new RedirectView( "adminpage");
     }
     @GetMapping("/admin/adminpage")
@@ -49,6 +49,7 @@ public class adminController {
         List<Accountant>GotAccs=null;
         List<Branch>branches=branchServices.getAllBranches();
         model.addAttribute("branches",branches);
+        model.addAttribute("branch",new Branch());
         if(students!=null) {gotStds=new ArrayList<>();for(Student s:students)gotStds.add(s);}
         if(accountants!=null){
             GotAccs=new ArrayList<>();
@@ -101,21 +102,21 @@ public class adminController {
         Accountant newAccountant=accountantServices.addNewAccountant(accountant);
         if(newAccountant==null){
             rd.addFlashAttribute("errorAccountant","Invalid Accountant Data");
-            System.out.println("from error doooooooooooooooooooooog");
             return "redirect:/createaccountant";
         }
         else{
             rd.addFlashAttribute("successAccountant","New Accountant Successfully Added!!!");
-            System.out.println("from successfull doooooooooooooooooooooog");
             return "redirect:/admin/createaccountant";
         }
     }
     @GetMapping("/student/delete/{stdId}")
-    public String deleteStudent(@PathVariable("stdId")int id,RedirectAttributes rd){
+    public String deleteStudent(@PathVariable("stdId")int id,RedirectAttributes rd,Model model){
         boolean deleted=studentServices.deleteStudentById(id);
+        List<Student>students=studentServices.getAllStudents();
+        model.addAttribute("allstds",students);
         if (deleted){
             rd.addFlashAttribute("deletedStudent","Student Deleted Successfully!!");
-            return "redirect:/admin";
+            return "redirect:/allstudent";
         }
         else{
             rd.addFlashAttribute("faildDeletingStudent","Failed to Delete Student!!");
@@ -141,11 +142,13 @@ public class adminController {
         }
     }
     @GetMapping("/accountant/delete/{acId}")
-    public String deleteAccountant(@PathVariable("acId") int id,RedirectAttributes rd){
+    public String deleteAccountant(@PathVariable("acId") int id,RedirectAttributes rd,Model model){
         boolean deleted=accountantServices.deleteAccountantById(id);
+        List<Accountant>accountants=accountantServices.getAllAccountant();
+        model.addAttribute("allaccs",accountants);
         if(deleted){
             rd.addFlashAttribute("deletedAccountant","Accountant Deleted Successfully!!");
-            return "redirect:/admin";
+            return "redirect:/admin/allaccountant";
         }
         else{
             rd.addFlashAttribute("faildDeletingAccountant","Failed to Delete Accountant!!");
@@ -176,6 +179,7 @@ public class adminController {
         List<Branch>branches=branchServices.getAllBranches();
         model.addAttribute("allstds",students);
         model.addAttribute("branches",branches);
+        model.addAttribute("branch",new Branch());
         return "adminpage";
     }
     @GetMapping("/allaccountant")
@@ -184,5 +188,19 @@ public class adminController {
         List<Branch>branches=branchServices.getAllBranches();
         model.addAttribute("allaccs",accountants);
         model.addAttribute("branches",branches);
-        return "adminpage";    }
+        model.addAttribute("branch",new Branch());
+        return "adminpage";
+    }
+    @PostMapping("/addbranch")
+    public String addNewBranch(@ModelAttribute("branch")Branch branch,RedirectAttributes rd){
+        Branch b=branchServices.addNewBranch(branch);
+        if(b!=null){
+            rd.addFlashAttribute("branchAdded","New Branch Added Successfully!!");
+            return "redirect:/admin";
+        }
+        else{
+            rd.addFlashAttribute("faildBranchAdded","Faild to add New Branch !!");
+            return "redirect:/admin";
+        }
+    }
 }

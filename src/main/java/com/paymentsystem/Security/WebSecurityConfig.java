@@ -1,5 +1,6 @@
 package com.paymentsystem.Security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -13,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    @Autowired private CustomeSuccessHandler successHandler;
     @Bean
     public UserDetailsService userDetailsService(){
         return new UserDetailsServicesImp();
@@ -45,6 +47,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/login")
                 .usernameParameter("email")
                 .loginProcessingUrl("/login")
+                .successHandler(successHandler)
                 .and()
                 .logout().permitAll()
                 .logoutUrl("/logout")

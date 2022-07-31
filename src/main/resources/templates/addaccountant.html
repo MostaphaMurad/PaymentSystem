@@ -77,28 +77,28 @@
                 <input th:hidden="true" type="text" th:name="id" th:field="*{id}">
                 <p>
                     <label class="implementation-label" for="email">Email</label>
-                    <input  class="text-center" id="email" type="email" th:name="email" th:field="*{email}" size="50px" placeholder="Accountant Email">
+                    <input required class="text-center" id="email" type="email" th:name="email" th:field="*{email}" size="50px" placeholder="Accountant Email">
                 </p>
                 <p>
                     <label class="implementation-label"  for="FirstName">First Name</label>
-                    <input class="text-center" id="FirstName" type="text" th:name="fname" th:field="*{fname}" size="50px" placeholder="Accountant First Name">
+                    <input required class="text-center" id="FirstName" type="text" th:name="fname" th:field="*{fname}" size="50px" placeholder="Accountant First Name">
                 </p>
                 <p>
                     <label class="implementation-label" for="LastName">Last Name</label>
-                    <input class="text-center" id="LastName" type="text" th:name="lname" th:field="*{lname}" size="50px" placeholder="Accountant Last Name">
+                    <input required class="text-center" id="LastName" type="text" th:name="lname" th:field="*{lname}" size="50px" placeholder="Accountant Last Name">
                 </p>
                 <p>
                     <label class="implementation-label" for="Password">Password</label>
-                    <input class="text-center" id="Password" type="password" th:name="password" th:field="*{password}" size="50px" placeholder="Accountant Password">
+                    <input  required class="text-center" id="Password" type="password" th:name="password" th:field="*{password}" size="50px" placeholder="Accountant Password">
                 </p>
                 <p>
                     <label class="implementation-label" for="Salary">Salary</label>
-                    <input class="text-center" id="Salary" type="text" th:name="salary" th:field="*{salary}" size="50px" placeholder="Accountant Salary">
+                    <input required class="text-center" id="Salary" type="text" th:name="salary" th:field="*{salary}" size="50px" placeholder="Accountant Salary">
 
                 </p>
                 <p>
                     <label class="implementation-label" for="Branches">Select Branch</label>
-                    <select name="branch" id="branches">
+                    <select required name="branch" id="branches">
                         <th:block th:each="b:${branches}">
                             <option th:value="${b.name}" th:field="*{branch}">[[${b.name}]]</option>
                         </th:block>
@@ -106,7 +106,7 @@
                 </p>
                 <p>
                     <label class="implementation-label" for="Role">Role</label>
-                    <input class="text-center" id="Role" type="checkbox" th:name="role" th:field="*{role}" th:text="${roleName}"  th:value="${roleId}" size="50px" placeholder="Accountant Salary">
+                    <input required class="text-center" id="Role" type="checkbox" th:name="role" th:field="*{role}" th:text="${roleName}"  th:value="${roleId}" size="50px" placeholder="Accountant Salary">
                 </p>
                 <input class="btn btn-primary btn-success" type="submit" value="Save">
             </form>

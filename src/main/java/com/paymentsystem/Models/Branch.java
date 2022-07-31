@@ -1,7 +1,9 @@
 package com.paymentsystem.Models;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Branch {
@@ -9,6 +11,17 @@ public class Branch {
     private String name;
     @OneToMany(mappedBy = "branch",fetch = FetchType.EAGER,cascade = CascadeType.DETACH)
     private List<Student>students;
+    @ManyToMany(mappedBy = "branches")
+    private Set<Trainer> trainers=new HashSet<>();
+
+    public Set<Trainer> getTrainers() {
+        return trainers;
+    }
+
+    public void setTrainers(Set<Trainer> trainers) {
+        this.trainers = trainers;
+    }
+
     public String getName() {
         return name;
     }

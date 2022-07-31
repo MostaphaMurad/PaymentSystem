@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Trainer</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+    <!-- <script th:src="@{/Javascript/LogoutForm.js}"></script>-->
+</head>
+<style>
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #333333;
+    }
+
+    li {
+        float: left;
+    }
+
+    li a {
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 16px;
+        text-decoration: none;
+    }
+
+    li a:hover {
+        background-color: #111111;
+    }
+</style>
+<body style="background-color: darkgray">
+<div class="container text-center pt-lg-5">
+    <h2 class="h2" style="color: blue">Please Fill the Below Fields</h2>
+    <div class="alert alert-danger" role="alert" th:text="${ErrorAddingTrainer}" th:if="${ErrorAddingTrainer}"></div>
+    <div class="alert alert-success" role="alert" th:text="${TrainedAdded}" th:if="${TrainedAdded}"></div>
+
+    <form  th:action="@{/accountant/savetrainer}" method="post" th:object="${trainer}" modelAttribute="trainer">
+        <input hidden type="text" name="id" th:field="*{id}" >
+        <p>
+            <label for="email">E-mail</label>
+            <input required class="form-control-sm ml-3" size="50" id="email" type="email" th:field="*{email}" placeholder="E-mail"><br>
+        </p>
+        <p>
+            <label for="password">Password</label>
+            <input required  class="form-control-sm mr-2" id="password" type="password" size="50" th:field="*{password}" placeholder="Password" ><br>
+        </p>
+        <p>
+            <label for="firstname">FirstName</label>
+            <input required  class="form-control-sm mr-3" id="firstname" type="text" size="50" th:field="*{fname}" placeholder="First Name" ><br>
+        </p>
+        <p>
+            <label for="lastname">LastName</label>
+            <input required  class="form-control-sm mr-3" id="lastname" type="text" size="50" th:field="*{lname}" placeholder="Last Name" ><br>
+        </p>
+        <p>
+            <label for="mobile">Mobile</label>
+            <input required  class="form-control-sm mr-5"  id="mobile" type="text" size="50" th:field="*{mobile}" placeholder="Phone Number" ><br>
+        </p>
+        <p>
+            <label for="salary">Salary</label>
+            <input required  class="form-control-sm mr-5"  id="salary" type="text" size="50" th:field="*{salary}" placeholder="Trainer Salary" ><br>
+        </p>
+        <p>
+            <label for="maxcourse">How Many Courses can trainer give</label>
+            <input required  class="form-control-sm mr-5"  id="maxcourse" type="text" size="50" th:field="*{maxCourses}" placeholder="Trainer Courses" ><br>
+        </p>
+        <p>
+            <label for="available">Available</label>
+            <input required  class="form-control-sm mr-5"  id="available" type="text" size="50" th:field="*{available}" placeholder="Is Trainer Available ?" ><br>
+        </p>
+        <label for="branches">Choose Branch</label>
+        <select required name="branch" id="branches">
+            <th:block th:each="b:${brns}">
+                <option th:value="${b.name}" th:name="brn" th:field="*{branches}">[[${b.name}]]</option>
+            </th:block>
+        </select><br>
+        <input required type="checkbox"  th:field="*{role}" th:text="${roleName}" th:value="${roleId}" class="m-2">
+        <!-- Your Fee:<input  class="form-control-sm" type="text" size="50" th:field="*{fee}" placeholder="Your Fee" ><br>-->
+        <input type="submit" value="Add Trainer">
+    </form>
+
+</div>
+
+</body>
+</html>

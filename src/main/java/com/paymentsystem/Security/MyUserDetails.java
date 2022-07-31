@@ -34,6 +34,10 @@ public class MyUserDetails implements UserDetails {
             return student.getFname();
         else return accountant.getFname();
     }
+    public String getAccountantBranch(){
+        if(accountant.getRole()!=null)return accountant.getBranch().getName();
+        return null;
+    }
     public MyUserDetails(User user){
         this.user=user;
     }

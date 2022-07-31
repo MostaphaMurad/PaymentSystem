@@ -46,8 +46,12 @@
   <ul >
     <li ><a th:href="@{/}">Home</a></li>
     <li ><a th:href="@{/student/register}">New Registration</a></li>
-    <li ><a th:href="@{/admin}">Administrator</a></li>
+    <li ><a th:href="@{/admin}">Administrator Home Page</a></li>
+    <li sec:authorize="hasAnyAuthority('ADMIN','ACCOUNTANT')">
+      <a th:href="@{/accountant}">Accountant Home Page</a>
+    </li>
     <li ><a th:href="@{#}">Contact us</a></li>
+
   </ul>
 </div>
 <div class="container" style="background-color: white">

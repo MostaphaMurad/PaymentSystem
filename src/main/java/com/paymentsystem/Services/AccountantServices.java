@@ -21,7 +21,10 @@ public class AccountantServices {
 
     public boolean deleteAccountantById(int id) {
         Accountant accountant=accountantRepository.findById(id).get();
-        if(accountant!=null)return true;
+        if(accountant!=null){
+            accountantRepository.deleteById(id);
+            return true;
+        }
         else return false;
     }
 
