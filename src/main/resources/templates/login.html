@@ -41,35 +41,33 @@
 <body style="background-color: darkgray">
 <div class="container border" >
   <h1 class="h1 border-1" style="color: indigo">Payment Billing System</h1>
-<!--
-  <img class="img-fluid" th:src="@{/images/banner.jpg}" alt="" style="max-width: 100%;height: auto">
--->
+  <div class="alert alert-success" role="alert" th:text="${success}" th:if="${success}"></div>
+
   <ul >
-    <li ><a th:href="@{#}">Home</a></li>
-    <li ><a th:href="@{#}">New Registration</a></li>
-    <li ><a th:href="@{#}">Modify Details</a></li>
-    <li ><a th:href="@{#}">Administrator</a></li>
+    <li ><a th:href="@{/}">Home</a></li>
+    <li ><a th:href="@{/student/register}">New Registration</a></li>
+    <li ><a th:href="@{/admin}">Administrator</a></li>
     <li ><a th:href="@{#}">Contact us</a></li>
   </ul>
 </div>
 <div class="container" style="background-color: white">
   <div class="text-center">
-    <h1 class="h3"><a th:href="@{#}">Login as administrator</a></h1>
+    <h1 class="h3"><a th:href="@{/admin/login}">Login as administrator</a></h1>
   </div>
   <div style="height: 200px">
     <h4 class="h4" style="color: blue">Login form</h4>
-    <label for="branches">Choose Branch</label>
 
-    <select name="branch" id="branches">
-      <th:block th:each="b:${branches}">
-        <option th:value="${b.name}">[[${b.name}]]</option>
-      </th:block>
-    </select><br>
     <form th:action="@{/login}" method="post" >
 
+      <label for="branches">Choose Branch</label>
 
-      <label>Email:   </label> <input type="email" name="email" placeholder="Your Email" required><br>
-      <label>Password:</label>  <input type="password" name="password" placeholder="Your Password" required><br>
+      <select name="branch" id="branches">
+        <th:block th:each="b:${branches}">
+          <option th:name="branch" th:value="${b.name}">[[${b.name}]]</option>
+        </th:block>
+      </select><br>
+      <label>Email:   </label> <input type="email" th:name="email" placeholder="Your Email" required><br>
+      <label>Password:</label>  <input type="password" th:name="password" placeholder="Your Password" required><br>
       <input class="btn btn-success" type="submit" value="Login"><br>
     </form>
 

@@ -1,15 +1,17 @@
 package com.paymentsystem.Models;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
 @Entity
 public class Student extends User{
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.DETACH)
     @JoinColumn(name = "role_id")
     private Roles role;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.DETACH)
     @JoinColumn(name = "branch_name", nullable = true)
     private Branch branch;
     @Column(length = 15)
@@ -21,9 +23,11 @@ public class Student extends User{
     @Column(name = "mother_name",length = 15)
     private String motherName;
     @Column(name = "birth_date")
-    private Date date;
+    @DateTimeFormat(pattern = "mm-dd-yy")
+    private String  date;
     @Column(name = "date_joining")
-    private Date joinedDate;
+    @DateTimeFormat(pattern = "mm-dd-yy")
+    private String joinedDate;
     private double fee;
     private double paid;
     private double balance;
@@ -79,19 +83,19 @@ public class Student extends User{
         this.motherName = motherName;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
-    public Date getJoinedDate() {
+    public String getJoinedDate() {
         return joinedDate;
     }
 
-    public void setJoinedDate(Date joinedDate) {
+    public void setJoinedDate(String joinedDate) {
         this.joinedDate = joinedDate;
     }
 
@@ -135,22 +139,4 @@ public class Student extends User{
         this.trainer = trainer;
     }
 
-    @Override
-    public String toString() {
-        return "Student{" +
-                "role=" + role +
-                ", branch=" + branch +
-                ", course='" + course + '\'' +
-                ", mobile='" + mobile + '\'' +
-                ", fatherName='" + fatherName + '\'' +
-                ", motherName='" + motherName + '\'' +
-                ", date=" + date +
-                ", joinedDate=" + joinedDate +
-                ", fee=" + fee +
-                ", paid=" + paid +
-                ", balance=" + balance +
-                ", description='" + description + '\'' +
-                ", trainer='" + trainer + '\'' +
-                '}';
-    }
 }

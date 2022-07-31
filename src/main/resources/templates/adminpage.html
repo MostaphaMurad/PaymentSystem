@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Home</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+    <!-- <script th:src="@{/Javascript/LogoutForm.js}"></script>-->
+</head>
+<style>
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #333333;
+    }
+
+    li {
+        float: left;
+    }
+
+    li a {
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 16px;
+        text-decoration: none;
+    }
+
+    li a:hover {
+        background-color: #111111;
+    }
+</style>
+<body style="background-color: darkgray">
+<div class="container border" >
+    <h1 class="h1 border-1" style="color: indigo">Payment Billing System</h1>
+<!--
+    <img class="img-fluid" th:src="@{/images/banner.jpg}" alt="" style="max-width: 100%;height: auto">
+-->
+    <ul >
+        <li ><a th:href="@{/}">Home</a></li>
+        <li ><a th:href="@{/student/register}">New Registration</a></li>
+        <li ><a th:href="@{/admin}">Administrator</a></li>
+        <li ><a th:href="@{#}">Contact us</a></li>
+        <li th:ref="navbar-item" sec:authorize="!isAuthenticated()">
+            <a th:href="@{/login}">Login</a>
+        </li>
+        <div class="container">
+            <li>
+                <a href="#">Logged as : </a>
+            </li>
+           <!-- <li>
+                <a href="#" th:text=" ${#authentication.getPrincipal().getFnameLoggedUser}"></a>
+            </li>-->
+        </div>
+        <li>
+            <a sec:authorize="isAuthenticated()" th:href="@{logout}">Logout</a>
+        </li>
+    </ul>
+    <div class="alert alert-success" role="alert" th:text="${deletedStudent}" th:if="${deletedStudent}"></div>
+    <div class="alert alert-danger" role="alert" th:text="${faildDeletingStudent}" th:if="${faildDeletingStudent}"></div>
+    <div class="container text-center pt-5" style="background-color: white;height: 200px">
+        <form th:action="@{/admin/find}" method="post">
+
+            <label for="branches">Choose Branch</label>
+            <select name="branch" id="branches">
+                <th:block th:each="b:${branches}">
+                    <option th:name="branch" th:value="${b.name}">[[${b.name}]]</option>
+                </th:block>
+            </select><br>
+            <input type="search" th:name="search" placeholder="Accountant or Student Name">
+            <input class="btn btn-secondary btn-primary" type="submit" value="Search">
+
+            <a th:href="@{/admin/createaccountant}">Add Accountant</a>
+        </form>
+        <form th:action="@{/admin/allstudent}" method="get">
+            <input style="display: inline;float: right"  type="submit" class="btn btn-secondary btn-success"  value="Show All Students">
+        </form>
+        <form th:action="@{/admin/allaccountant}" method="get">
+            <input style="display: inline;float: right"  type="submit" class="btn btn-secondary btn-success mr-3"  value="Show All Accountant">
+        </form>
+    </div>
+    <h2 class="h2" style="color: green">Found Student</h2>
+
+    <div class="container text-center" style="background-color: white">
+
+        <td><div class="alert alert-danger" role="alert" th:text="${error}" th:if="${error}"></div></td>
+
+        <table class="table table-bordered p-2">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">ID</th>
+                <th scope="col">Email</th>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Fee</th>
+                <th scope="col">Balance</th>
+                <th scope="col">Branch</th>
+                <th scope="col">Role</th>
+                <th scope="col">Phone</th>
+                <th scope="col">Action</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <!--/*@thymesVar id="users" type="aj"*/-->
+            <th:block th:each="std:${stds}">
+                <tr>
+                    <td></td>
+                    <td>[[${std.id}]]</td>
+                    <td>[[${std.email}]]</td>
+                    <td>[[${std.fname}]]</td>
+                    <td>[[${std.lname}]]</td>
+                    <td>[[${std.fee}]]</td>
+                    <td>[[${std.balance}]]</td>
+                    <td>[[${std.branch.name}]]</td>
+                    <td>[[${std.role.name}]]</td>
+                    <td>[[${std.mobile}]]</td>
+                    <td sec:authorize="hasAuthority('ADMIN')">
+                        <a class="h4 pr-1 text-primary" th:href="@{'/admin/student/edit/' +${std.id}}">Edit </a>
+                        <a class="h4 text-danger" th:href="@{'/admin/student/delete/' +${std.id}}">Delete</a>
+                    </td>
+
+                    <td></td>
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+    </div>
+    <div class="text-center">#######################################################################################################</div>
+    <h2 class="h2" style="color: green">Found Accountant</h2>
+    <div class="alert alert-success" role="alert" th:text="${deletedAccountant}" th:if="${deletedAccountant}"></div>
+    <div class="alert alert-danger" role="alert" th:text="${faildDeletingAccountant}" th:if="${faildDeletingAccountant}"></div>
+
+    <div class="container text-center" style="background-color: white">
+        <td><div class="alert alert-danger" role="alert" th:text="${error2}" th:if="${error2}"></div></td>
+
+        <table class="table table-bordered p-2">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">ID</th>
+                <th scope="col">Email</th>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Salary</th>
+                <th scope="col">Branch</th>
+                <th scope="col">Role</th>
+                <th scope="col">Action</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <!--/*@thymesVar id="users" type="aj"*/-->
+            <th:block th:each="acc:${accs}">
+                <tr>
+                    <td></td>
+                    <td>[[${acc.id}]]</td>
+                    <td>[[${acc.email}]]</td>
+                    <td>[[${acc.fname}]]</td>
+                    <td>[[${acc.lname}]]</td>
+                    <td>[[${acc.salary}]]</td>
+                    <td>[[${acc.branch.name}]]</td>
+                    <td>[[${acc.role.name}]]</td>
+                    <td sec:authorize="hasAuthority('ADMIN')">
+                        <a class="h4 pr-1 text-primary" th:href="@{'/admin/accountant/edit/' +${acc.id}}">Edit </a>
+                        <a class="h4 text-danger" th:href="@{'/admin/accountant/delete/' +${acc.id}}">Delete</a>
+                    </td>
+
+                    <td></td>
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+    </div>
+    <div class="text-center">###############################################################################################</div>
+
+    <div class="container text-center">
+        <h2 class="h2" style="color: red">All Students</h2>
+        <table class="table table-bordered p-2">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">ID</th>
+                <th scope="col">Email</th>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Fee</th>
+                <th scope="col">Balance</th>
+                <th scope="col">Branch</th>
+                <th scope="col">Role</th>
+                <th scope="col">Phone</th>
+                <th scope="col">Action</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <!--/*@thymesVar id="users" type="aj"*/-->
+            <th:block th:each="std:${allstds}">
+                <tr>
+                    <td></td>
+                    <td>[[${std.id}]]</td>
+                    <td>[[${std.email}]]</td>
+                    <td>[[${std.fname}]]</td>
+                    <td>[[${std.lname}]]</td>
+                    <td>[[${std.fee}]]</td>
+                    <td>[[${std.balance}]]</td>
+                    <td>[[${std.branch.name}]]</td>
+                    <td>[[${std.role.name}]]</td>
+                    <td>[[${std.mobile}]]</td>
+                    <td sec:authorize="hasAuthority('ADMIN')">
+                        <a class="h4 pr-1 text-primary" th:href="@{'/admin/student/edit/' +${std.id}}">Edit </a>
+                        <a class="h4 text-danger" th:href="@{'/admin/student/delete/' +${std.id}}">Delete</a>
+                    </td>
+
+                    <td></td>
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+
+    </div>
+    <div class="text-center">###############################################################################################</div>
+    <div class="container text-center">
+        <h2 class="h2" style="color: red">All Accountant</h2>
+        <table class="table table-bordered p-2">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">ID</th>
+                <th scope="col">Email</th>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Salary</th>
+                <th scope="col">Branch</th>
+                <th scope="col">Role</th>
+                <th scope="col">Action</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <!--/*@thymesVar id="users" type="aj"*/-->
+            <th:block th:each="acc:${allaccs}">
+                <tr>
+                    <td></td>
+                    <td>[[${acc.id}]]</td>
+                    <td>[[${acc.email}]]</td>
+                    <td>[[${acc.fname}]]</td>
+                    <td>[[${acc.lname}]]</td>
+                    <td>[[${acc.salary}]]</td>
+                    <td>[[${acc.branch.name}]]</td>
+                    <td>[[${acc.role.name}]]</td>
+                    <td sec:authorize="hasAuthority('ADMIN')">
+                        <a class="h4 pr-1 text-primary" th:href="@{'/admin/accountant/edit/' +${acc.id}}">Edit </a>
+                        <a class="h4 text-danger" th:href="@{'/admin/accountant/delete/' +${acc.id}}">Delete</a>
+                    </td>
+
+                    <td></td>
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
+</body>
+</html>

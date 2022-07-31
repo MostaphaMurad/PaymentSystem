@@ -1,15 +1,13 @@
 package com.paymentsystem.Models;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.List;
 
 @Entity
 public class Branch {
     @Id
     private String name;
-    @OneToMany(mappedBy = "branch")
+    @OneToMany(mappedBy = "branch",fetch = FetchType.EAGER,cascade = CascadeType.DETACH)
     private List<Student>students;
     public String getName() {
         return name;

@@ -1,0 +1,12 @@
+.container {
+    width: 500px!important;
+    clear: both!important;
+}
+
+.container input {
+    width: 100%!important;
+    clear: both!important;
+}
+.mord{
+    color: royalblue!important;
+}

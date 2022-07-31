@@ -21,6 +21,12 @@ public class MyUserDetails implements UserDetails {
             return student.getEmail();
         else return accountant.getEmail();
     }
+    public String getRoleName(){
+        if(student.getRole()!=null)return student.getRole().getName();
+        else if(admin.getRoles()!=null)return admin.getRoles().getName();
+        else if(accountant.getRole()!=null)return accountant.getRole().getName();
+        else return null;
+    }
     public String getFnameLoggedUser(){
         if(admin.getFname()!=null)
             return admin.getFname();
@@ -58,8 +64,8 @@ public class MyUserDetails implements UserDetails {
         List<SimpleGrantedAuthority> authorities=new ArrayList<>();
         for(Roles role:roles){
             authorities.add(new SimpleGrantedAuthority(role.getName()));
-            System.out.println(role.getName());
-            System.out.println(role.getId());
+        /*    System.out.println(role.getName());
+            System.out.println(role.getId());*/
         }
         return authorities;
     }

@@ -10,12 +10,20 @@ public class Roles {
     @Column(nullable = true,length = 15,name = "role_name")
     private String name;
 
-    public int getId() {
+    @Override
+    public String toString() {
+        return "Roles{" +
+                "roleId=" + roleId +
+                ", name='" + name + '\'' +
+                '}';
+    }
+
+    public int getRoleId() {
         return roleId;
     }
 
-    public void setId(int id) {
-        this.roleId = id;
+    public void setRoleId(int roleId) {
+        this.roleId = roleId;
     }
 
     public String getName() {
@@ -24,13 +32,5 @@ public class Roles {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    @Override
-    public String toString() {
-        return "Roles{" +
-                "id=" + roleId +
-                ", name='" + name + '\'' +
-                '}';
     }
 }

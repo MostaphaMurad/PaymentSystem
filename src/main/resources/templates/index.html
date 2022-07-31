@@ -41,26 +41,29 @@
 <body style="background-color: darkgray">
 <div class="container border" >
     <h1 class="h1 border-1" style="color: indigo">Payment Billing System</h1>
+
+<!--
     <img class="img-fluid" th:src="@{/images/banner.jpg}" alt="" style="max-width: 100%;height: auto">
+-->
     <ul >
         <li ><a th:href="@{/}">Home</a></li>
-        <li ><a th:href="@{/register}">New Registration</a></li>
-        <li ><a th:href="@{/modify}">Modify Details</a></li>
-        <li ><a th:href="@{/admin/page}">Administrator</a></li>
+        <li ><a th:href="@{/student/register}">New Registration</a></li>
+        <li ><a th:href="@{/admin}">Administrator</a></li>
         <li ><a th:href="@{#}">Contact us</a></li>
         <li th:ref="navbar-item" sec:authorize="!isAuthenticated()">
-            <a th:href="@{/home/login}">Login</a>
+            <a th:href="@{/login}">Login</a>
         </li>
-        <li><a th:href="@{logout}">Logout</a></li>
         <div class="container">
             <li>
                 <a href="#">Logged as : </a>
             </li>
-            <li>
+          <!--  <li>
                 <a href="#" th:text=" ${#authentication.getPrincipal().getFnameLoggedUser}"></a>
-            </li>
+            </li>-->
         </div>
-
+       <!-- <li>
+            <a sec:authorize="isAuthenticated()" th:href="@{logout}">Logout</a>
+        </li>-->
 
     </ul>
 

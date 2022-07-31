@@ -24,16 +24,18 @@ public class homeController {
     @Autowired
     UserServices userServices;
     @RequestMapping("/")
-    public String home(Model model){
+    public String home(Model model,@AuthenticationPrincipal MyUserDetails userDetails){
         Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
         if(authentication==null||authentication instanceof AnonymousAuthenticationToken)return "redirect:/login";
         else{
+           if(userDetails.getRoleName().equals("ADMIN")){
+               return "redirect:/admin";
+           }
             return "index";
         }
     }
     @GetMapping({"/login"})
-    public String login(Model model){
-
+    public String login(Model model,@AuthenticationPrincipal MyUserDetails userDetails){
         List<Branch>branches=branchServices.getAllBranches();
         model.addAttribute("branches",branches);
         return "login";

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Accountant</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+</head><style>
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #333333;
+    }
+
+    li {
+        float: left;
+    }
+
+    li a {
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 16px;
+        text-decoration: none;
+    }
+
+    li a:hover {
+        background-color: #111111;
+    }
+</style>
+
+<body>
+<div class="container border" >
+    <h1 class="h1 border-1" style="color: indigo">Payment Billing System</h1>
+
+<!--
+    <img class="img-fluid" th:src="@{/images/banner.jpg}" alt="" style="max-width: 100%;height: auto">
+-->
+    <ul >
+        <li ><a th:href="@{/}">Home</a></li>
+        <li ><a th:href="@{/student/register}">New Registration</a></li>
+        <li ><a th:href="@{/admin}">Administrator</a></li>
+        <li ><a th:href="@{#}">Contact us</a></li>
+        <li th:ref="navbar-item" sec:authorize="!isAuthenticated()">
+            <a th:href="@{/login}">Login</a>
+        </li>
+        <div class="container">
+            <li>
+                <a href="#">Logged as : </a>
+            </li>
+           <!-- <li>
+                <a href="#" th:text=" ${#authentication.getPrincipal().getFnameLoggedUser}"></a>
+            </li>-->
+        </div>
+        <li>
+            <a sec:authorize="isAuthenticated()" th:href="@{logout}">Logout</a>
+        </li>
+
+    </ul>
+
+</div>
+<div class="container text-center">
+    <h2 class="h2 m-5" style="color: darkgreen">Create New Accountant</h2>
+    <div class="alert alert-danger" role="alert" th:text="${errorAccountant}" th:if="${errorAccountant}"></div>
+    <div class="alert alert-success" role="alert" th:text="${successAccountant}" th:if="${successAccountant}"></div>
+    <div class="row">
+        <div class="col-12">
+            <form th:action="@{/admin/saveaccountant}" method="post" th:object="${accountant}" modelAttribute="accountant">
+                <input th:hidden="true" type="text" th:name="id" th:field="*{id}">
+                <p>
+                    <label class="implementation-label" for="email">Email</label>
+                    <input  class="text-center" id="email" type="email" th:name="email" th:field="*{email}" size="50px" placeholder="Accountant Email">
+                </p>
+                <p>
+                    <label class="implementation-label"  for="FirstName">First Name</label>
+                    <input class="text-center" id="FirstName" type="text" th:name="fname" th:field="*{fname}" size="50px" placeholder="Accountant First Name">
+                </p>
+                <p>
+                    <label class="implementation-label" for="LastName">Last Name</label>
+                    <input class="text-center" id="LastName" type="text" th:name="lname" th:field="*{lname}" size="50px" placeholder="Accountant Last Name">
+                </p>
+                <p>
+                    <label class="implementation-label" for="Password">Password</label>
+                    <input class="text-center" id="Password" type="password" th:name="password" th:field="*{password}" size="50px" placeholder="Accountant Password">
+                </p>
+                <p>
+                    <label class="implementation-label" for="Salary">Salary</label>
+                    <input class="text-center" id="Salary" type="text" th:name="salary" th:field="*{salary}" size="50px" placeholder="Accountant Salary">
+
+                </p>
+                <p>
+                    <label class="implementation-label" for="Branches">Select Branch</label>
+                    <select name="branch" id="branches">
+                        <th:block th:each="b:${branches}">
+                            <option th:value="${b.name}" th:field="*{branch}">[[${b.name}]]</option>
+                        </th:block>
+                    </select><br>
+                </p>
+                <p>
+                    <label class="implementation-label" for="Role">Role</label>
+                    <input class="text-center" id="Role" type="checkbox" th:name="role" th:field="*{role}" th:text="${roleName}"  th:value="${roleId}" size="50px" placeholder="Accountant Salary">
+                </p>
+                <input class="btn btn-primary btn-success" type="submit" value="Save">
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
