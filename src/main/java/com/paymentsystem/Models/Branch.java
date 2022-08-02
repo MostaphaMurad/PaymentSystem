@@ -13,9 +13,18 @@ public class Branch {
     private List<Student>students;
     @ManyToMany(mappedBy = "branches")
     private Set<Trainer> trainers=new HashSet<>();
-
+    @ManyToMany(mappedBy = "branches")
+    Set<Course>courses=new HashSet<>();
     public Set<Trainer> getTrainers() {
         return trainers;
+    }
+
+    public Set<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(Set<Course> courses) {
+        this.courses = courses;
     }
 
     public void setTrainers(Set<Trainer> trainers) {

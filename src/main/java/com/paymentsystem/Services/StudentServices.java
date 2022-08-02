@@ -38,4 +38,15 @@ public class StudentServices {
     public List<Student> getAllStudents() {
         return studentRepository.findAll();
     }
+
+    public Student getStudentByEmail(String logedEmail) {
+        Student student=studentRepository.findByEmail(logedEmail);
+        return student;
+    }
+
+    public boolean saveStudentWithEnrolledCourses(Student logedStudent) {
+        Student student=studentRepository.save(logedStudent);
+        if(student!=null)return true;
+        return false;
+    }
 }

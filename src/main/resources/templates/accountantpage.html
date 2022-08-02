@@ -47,7 +47,7 @@
     <ul >
         <li ><a th:href="@{/}">Home</a></li>
         <li ><a th:href="@{/student/register}">New Registration</a></li>
-        <li><a th:href="@{/accountant}"></a></li>
+        <li><a th:href="@{/accountant}">Accountant</a></li>
         <li ><a th:href="@{#}">Contact us</a></li>
         <li th:ref="navbar-item" sec:authorize="!isAuthenticated()">
             <a th:href="@{/login}">Login</a>
@@ -66,38 +66,51 @@
     </ul>
     <div class="alert alert-success" role="alert" th:text="${deletedStudent}" th:if="${deletedStudent}"></div>
     <div class="alert alert-danger" role="alert" th:text="${faildDeletingStudent}" th:if="${faildDeletingStudent}"></div>
+    <div class="alert alert-success" role="alert" th:text="${AssignedCourses}" th:if="${AssignedCourses}"></div>
+    <div class="alert alert-success" role="alert" th:text="${deletedTrainer}" th:if="${deletedTrainer}"></div>
+    <div class="alert alert-danger" role="alert" th:text="${faildDeletedTrainer}" th:if="${faildDeletedTrainer}"></div>
+    <div class="alert alert-success" role="alert" th:text="${savedCourse}" th:if="${savedCourse}"></div>
+    <div class="alert alert-danger" role="alert" th:text="${FailedsaveCourse}" th:if="${FailedsaveCourse}"></div>
+    <div class="alert alert-success" role="alert" th:text="${CourseDeleted}" th:if="${CourseDeleted}"></div>
+    <div class="alert alert-danger" role="alert" th:text="${FaildDeleteCourse}" th:if="${FaildDeleteCourse}"></div>
+
     <div  class="container justify-content-center align-content-center text-center pt-5" style="background-color: white;height: 200px">
 
-        <div class="container justify-content-center align-content-center">
-            <form th:action="@{/accountant/allstudent}" method="get">
-                <input style="display: inline;float: right"  type="submit" class="btn btn-secondary btn-success"  value="Show All Students">
+<div class="container justify-content-center align-content-center">
+    <form th:action="@{/accountant/allstudent}" method="get">
+        <input style="display: inline;float: right"  type="submit" class="btn btn-secondary btn-success"  value="All Students">
+    </form>
+    <form th:action="@{/accountant/getallcourses}" method="get">
+        <input  style="display: inline;float: right" class="btn btn-success btn-primary mr-2" type="submit" value="All Courses">
+
+    </form>
+    <form th:action="@{/accountant/alltrainer}" method="get">
+        <input  style="display: inline;float: right" class="btn btn-success btn-primary mr-2" type="submit" value="All Trainers">
+
+    </form>
+</div>
+
+
+        <div class="container align-content-center justify-content-center" >
+            <form th:action="@{/accountant/find}" method="post">
+                <label for="branches">Choose Branch</label>
+                <select name="branch" id="branches">
+                    <th:block th:each="b:${branches}">
+                        <option th:name="branch" th:value="${b.name}">[[${b.name}]]</option>
+                    </th:block>
+                </select><br>
+                <input type="search" th:name="search" placeholder="Student Name">
+                <input class="btn btn-secondary btn-primary" type="submit" value="Search">
+
             </form>
+            <a style="float:  right" th:href="@{/student/register}">Add Student</a>
+            <a style="float: right "  class="mr-2" th:href="@{/accountant/addtrainer}">Add Trainer</a>
+            <a style="float: right "  class="mr-2" th:href="@{/accountant/addcourse}">Add Course</a>
         </div>
-        <div  class="container justify-content-center align-content-center text-center pt-5" style="background-color: white;height: 200px">
-            <div class="container align-content-center justify-content-center" >
-                <form th:action="@{/accountant/find}" method="post">
-                    <label for="branches">Choose Branch</label>
-                    <select name="branch" id="branches">
-                        <th:block th:each="b:${branches}">
-                            <option th:name="branch" th:value="${b.name}">[[${b.name}]]</option>
-                        </th:block>
-                    </select><br>
-                    <input type="search" th:name="search" placeholder="Student Name">
-                    <input class="btn btn-secondary btn-primary" type="submit" value="Search">
-
-                    <a th:href="@{/student/register}">Add Student</a>
-                </form>
-            </div>
-            <div class="container align-content-center justify-content-center" >
-                <form th:action="@{/accountant/alltrainer}" method="get">
-                    <input  style="display: inline;float: right" class="btn btn-success btn-primary" type="submit" value="All Trainers">
-                    <a th:href="@{/accountant/addtrainer}">Add Trainer</a>
-                </form>
-            </div>
-        </div>
-
 
     </div>
+    </div>
+
 
 
     <div class="container text-center" style="background-color: white">
@@ -136,8 +149,10 @@
                     <td>[[${std.role.name}]]</td>
                     <td>[[${std.mobile}]]</td>
                     <td sec:authorize="hasAnyAuthority('ADMIN','ACCOUNTANT')">
-                        <a class="h4 pr-1 text-primary" th:href="@{'/accountant/student/edit/' +${std.id}}">Edit </a>
-                        <a class="h4 text-danger" th:href="@{'/accountant/student/delete/' +${std.id}}">Delete</a>
+                        <a class="h6 pr-1 text-primary" th:href="@{'/accountant/student/edit/' +${std.id}}">Edit </a>
+                        <a class="h6 text-danger" th:href="@{'/accountant/student/delete/' +${std.id}}">Delete</a>
+                        <a class="h6 text-danger" style="color: green!important;display: inline-flex" th:href="@{'/accountant/student/enroll/' +${std.id}}">Join Course</a>
+
                     </td>
 
                     <td></td>
@@ -161,7 +176,6 @@
                 <th scope="col">Fee</th>
                 <th scope="col">Balance</th>
                 <th scope="col">Branch</th>
-                <th scope="col">Role</th>
                 <th scope="col">Phone</th>
                 <th scope="col">Action</th>
                 <th></th>
@@ -179,11 +193,11 @@
                     <td>[[${std.fee}]]</td>
                     <td>[[${std.balance}]]</td>
                     <td>[[${std.branch.name}]]</td>
-                    <td>[[${std.role.name}]]</td>
                     <td>[[${std.mobile}]]</td>
                     <td sec:authorize="hasAnyAuthority('ADMIN','ACCOUNTANT')">
-                        <a class="h4 pr-1 text-primary" th:href="@{'/accountant/student/edit/' +${std.id}}">Edit </a>
-                        <a class="h4 text-danger" th:href="@{'/accountant/student/delete/' +${std.id}}">Delete</a>
+                        <a class="h6 pr-1 text-primary" th:href="@{'/accountant/student/edit/' +${std.id}}">Edit </a>
+                        <a class="h6 text-danger" th:href="@{'/accountant/student/delete/' +${std.id}}">Delete</a>
+                        <a class="h6 text-danger" style="color: green!important;display: inline-flex" th:href="@{'/accountant/student/enroll/' +${std.id}}">Join Course</a>
                     </td>
 
                     <td></td>
@@ -207,17 +221,14 @@
                 <th scope="col">Last Name</th>
                 <th scope="col">Salary</th>
                 <th scope="col">Avialable</th>
-               <!-- <th scope="col">Max Courses</th>-->
                 <th scope="col">Phone</th>
-          <!--      <th scope="col">Role</th>
-                -->
                 <th scope="col">Branch</th>
+                <th scope="col">Courses</th>
                 <th scope="col">Action</th>
                 <th></th>
             </tr>
             </thead>
             <tbody>
-            <!--/*@thymesVar id="users" type="aj"*/-->
             <th:block th:each="tr:${trainers}">
                 <tr>
                     <td></td>
@@ -227,29 +238,68 @@
                     <td>[[${tr.lname}]]</td>
                     <td>[[${tr.salary}]]</td>
                     <td>[[${tr.available}]]</td>
-                    <!--<td>[[${tr.maxCourses}]]</td>-->
-                  <!--  <td>[[${tr.role.name}]]</td>
-                    -->
                     <td>[[${tr.mobile}]]</td>
                     <td>
                         <th:block th:each="bran:${tr.branches}">
                             [[${bran.name}]],
                         </th:block>
                     </td>
-                    <td sec:authorize="hasAnyAuthority('ADMIN','ACCOUNTANT')">
-                        <a class="h4 pr-1 text-primary" th:href="@{'/accountant/trainer/edit/' +${tr.id}}">Edit </a>
-                        <a class="h4 text-danger" th:href="@{'/accountant/trainer/delete/' +${tr.id}}">Delete</a>
+                    <td>
+                        <th:block th:each="c:${tr.courses}">
+                            [[${c.name}]],
+                        </th:block>
                     </td>
-
+                    <td sec:authorize="hasAnyAuthority('ADMIN','ACCOUNTANT')">
+                        <a class="h6 pr-1 text-primary" th:href="@{'/accountant/trainer/edit/' +${tr.id}}">Edit </a>
+                        <a class="h6 text-danger" th:href="@{'/accountant/trainer/delete/' +${tr.id}}">Delete</a>
+                        <a style="color: green!important; display: inline-flex" class="h6 text-danger" th:href="@{'/accountant/trainer/assigncourse/' +${tr.id}}">Add Course</a>
+                    </td>
                     <td></td>
                 </tr>
             </th:block>
             </tbody>
         </table>
-
     </div>
 
+    <div class="text-center">###############################################################################################</div>
 
-</div>
+    <div class="container text-center justify-content-center align-content-center">
+        <h2 class="h2" style="color: red;float: left">All Courses</h2>
+        <table class="table table-bordered p-2">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Course Price</th>
+                <th scope="col">Course Duration</th>
+                <th scope="col">Course Avialable Branches</th>
+                <th>Action</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <th:block th:each="c:${courses}">
+                <tr>
+                    <td></td>
+                    <td>[[${c.name}]]</td>
+                    <td>[[${c.courseSalary}]]</td>
+                    <td>[[${c.courseDuration}]]</td>
+                    <td>
+                        <th:block th:each="b:${c.branches}">
+                            [[${b.name}]],
+                        </th:block>
+                    </td>
+
+                    <td sec:authorize="hasAnyAuthority('ADMIN','ACCOUNTANT')">
+                        <a class="h6 pr-1 text-primary" th:href="@{'/accountant/course/edit/' +${c.name}}">Edit </a>
+                        <a class="h6 text-danger" th:href="@{'/accountant/course/delete/' +${c.name}}">Delete</a>
+                    </td>
+                    <td></td>
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+    </div>
+
 </body>
 </html>

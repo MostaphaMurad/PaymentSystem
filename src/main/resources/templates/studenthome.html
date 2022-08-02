@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Home</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+</head>
+<style>
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #333333;
+    }
+
+    li {
+        float: left;
+    }
+
+    li a {
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 16px;
+        text-decoration: none;
+    }
+
+    li a:hover {
+        background-color: #111111;
+    }
+</style>
+<body>
+<ul >
+    <li ><a th:href="@{/}">Home</a></li>
+    <li ><a th:href="@{/student/register}">New Registration</a></li>
+    <li ><a th:href="@{#}">Contact us</a></li>
+    <li th:ref="navbar-item" sec:authorize="!isAuthenticated()">
+        <a th:href="@{/login}">Login</a>
+    </li>
+    <div  style="float: right">
+        <li>
+            <span class="text-center mt-3" style="float: left;color: blue">Logged as </span>  <a style="float: right" href="#" th:text=" ${#authentication.getPrincipal().getFnameLoggedUser}"></a>
+        </li>
+
+        <li>
+            <a sec:authorize="isAuthenticated()" th:href="@{logout}">Logout</a>
+        </li>
+    </div>
+
+</ul>
+<div class="container text-center mt-5 justify-content-center align-content-center">
+    <div class="alert alert-success" role="alert" th:text="${Enrolled}" th:if="${Enrolled}"></div>
+    <div class="alert alert-danger" role="alert" th:text="${FaildEnroll}" th:if="${FaildEnroll}"></div>
+    <div class="alert alert-success" role="alert" th:text="${CourseRemoved}" th:if="${CourseRemoved}"></div>
+    <div class="alert alert-success" role="alert" th:text="${CourseRemovedFaild}" th:if="${CourseRemovedFaild}"></div>
+
+    <div class="row">
+        <div class="col-12">
+            <label style="display: inline-flex" for="courses">Choose one or more  Course to join</label>
+            <form th:action="@{/student/enroll}" method="post">
+                    <select multiple th:name="courses" id="courses">
+                        <th:block th:each="c:${foundCourses}">
+                            <option th:value="${c.name}" th:name="course">[[${c.name}]]</option>
+                        </th:block>
+                    </select>
+                    <th sec:authorize="hasAnyAuthority('STUDENT','ADMIN','ACOUNTANT')"><input class="btn btn-success" type="submit" value="Enroll Course"></th>
+
+            </form>
+        </div>
+    </div>
+</div>
+<div class="container text-center" style="background-color: white">
+    <h2  class="h2" style="color: red;float: left">Enrolled Courses</h2>
+    <table class="table table-bordered p-2">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Course Name</th>
+            <th scope="col">Course Price</th>
+            <th scope="col">Course Duration</th>
+            <th scope="col">Course Trainers</th>
+            <th scope="col">Action</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--/*@thymesVar id="users" type="aj"*/-->
+        <th:block th:each="c:${enrolled}">
+            <tr>
+                <td></td>
+                <td>[[${c.name}]]</td>
+                <td>[[${c.courseSalary}]]</td>
+                <td>[[${c.courseDuration}]]</td>
+                <td>
+                    <th:block th:each="tr:${c.trainers}">
+                        [[${tr.fname}]],
+                    </th:block>
+                </td>
+                <td sec:authorize="hasAnyAuthority('STUDENT','ADMIN','ACCOUNTANT')">
+                    <a class="h6 pr-1 text-danger" th:href="@{'/student/removecourse/' +${c.name}}">Cancel </a>
+                </td>
+                <td></td>
+            </tr>
+        </th:block>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

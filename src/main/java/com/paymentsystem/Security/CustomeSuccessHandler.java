@@ -28,7 +28,7 @@ public class CustomeSuccessHandler implements AuthenticationSuccessHandler {
                 break;
             }
             else if(grantedAuthority.getAuthority().equals("STUDENT")){
-                redirect="/";
+                redirect="/student";
                 break;
             }
 

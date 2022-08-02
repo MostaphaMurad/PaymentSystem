@@ -4,7 +4,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Student extends User{
@@ -14,6 +16,10 @@ public class Student extends User{
     @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.DETACH)
     @JoinColumn(name = "branch_name", nullable = true)
     private Branch branch;
+
+    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.DETACH)
+    @JoinTable(name = "student_course",joinColumns = {@JoinColumn(name = "student_id")},inverseJoinColumns = {@JoinColumn(name = "course_name")})
+    Set<Course>courses=new HashSet<>();
     @Column(length = 15)
    private String course;
     @Column(length = 15)
@@ -35,6 +41,10 @@ public class Student extends User{
     private String description;
     private String trainer;
 
+    public void removeCourse(Course course){
+        this.courses.remove(course);
+        course.getStudents().remove(this);
+    }
     public String getCourse() {
         return course;
     }
@@ -45,6 +55,14 @@ public class Student extends User{
 
     public void setBranch(Branch branch) {
         this.branch = branch;
+    }
+
+    public Set<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(Set<Course> courses) {
+        this.courses = courses;
     }
 
     public void setCourse(String course) {

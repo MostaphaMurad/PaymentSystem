@@ -1,7 +1,12 @@
 package com.paymentsystem.Models;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -21,6 +26,14 @@ public class Trainer  extends User{
 
     public void setRole(Roles role) {
         this.role = role;
+    }
+    @ManyToMany(cascade = CascadeType.DETACH,fetch = FetchType.EAGER)
+    @JoinTable(name = "Trainer_Courses",joinColumns = {@JoinColumn(name = "trainer_id")},inverseJoinColumns = {@JoinColumn(name = "course_name")})
+    private Set<Course>courses=new HashSet<>();
+
+    public Trainer(){}
+    public Trainer(Set<Course> courses) {
+        this.courses = courses;
     }
 
     @ManyToMany(cascade = CascadeType.DETACH,fetch = FetchType.EAGER)
@@ -67,5 +80,13 @@ public class Trainer  extends User{
 
     public void setBranches(Set<Branch> branches) {
         this.branches = branches;
+    }
+
+    public Set<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(Set<Course> courses) {
+        this.courses = courses;
     }
 }

@@ -24,4 +24,9 @@ public class BranchServices {
         Branch added=branchRepository.save(branch);
         return added;
     }
+
+    public Branch getBranchByName(String branchName) {
+        Branch branch=branchRepository.findById(branchName).get();
+        return branch;
+    }
 }

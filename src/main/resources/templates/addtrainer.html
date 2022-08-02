@@ -39,6 +39,26 @@
     }
 </style>
 <body style="background-color: darkgray">
+<ul >
+    <li ><a th:href="@{/}">Home</a></li>
+    <li ><a th:href="@{/student/register}">New Registration</a></li>
+    <li><a th:href="@{/accountant}"></a></li>
+    <li ><a th:href="@{#}">Contact us</a></li>
+    <li th:ref="navbar-item" sec:authorize="!isAuthenticated()">
+        <a th:href="@{/login}">Login</a>
+    </li>
+    <div class="container">
+        <li>
+            <a href="#">Logged as : </a>
+        </li>
+        <!-- <li>
+             <a href="#" th:text=" ${#authentication.getPrincipal().getFnameLoggedUser}"></a>
+         </li>-->
+    </div>
+    <li>
+        <a sec:authorize="isAuthenticated()" th:href="@{logout}">Logout</a>
+    </li>
+</ul>
 <div class="container text-center pt-lg-5">
     <h2 class="h2" style="color: blue">Please Fill the Below Fields</h2>
     <div class="alert alert-danger" role="alert" th:text="${ErrorAddingTrainer}" th:if="${ErrorAddingTrainer}"></div>
@@ -84,6 +104,12 @@
                 <option th:value="${b.name}" th:name="brn" th:field="*{branches}">[[${b.name}]]</option>
             </th:block>
         </select><br>
+        <label for="courses">Assign Courses For Trainer</label>
+        <select multiple required name="courses" id="courses">
+            <th:block th:each="c:${courses}">
+                <option th:value="${c.name}" th:name="course" th:field="*{courses}">[[${c.name}]]</option>
+            </th:block>
+        </select>
         <input required type="checkbox"  th:field="*{role}" th:text="${roleName}" th:value="${roleId}" class="m-2">
         <!-- Your Fee:<input  class="form-control-sm" type="text" size="50" th:field="*{fee}" placeholder="Your Fee" ><br>-->
         <input type="submit" value="Add Trainer">
