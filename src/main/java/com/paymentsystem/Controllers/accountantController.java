@@ -28,7 +28,7 @@ public class accountantController {
     @Autowired private TrainerServices trainerServices;
     @GetMapping("/accountant")
     public String getAccountant(Model model,@AuthenticationPrincipal MyUserDetails userDetails){
-        if(userDetails==null)return "redirect:/login";
+       /* if(userDetails==null)return "redirect:/login";*/
         List<Student> students=studentServices.getAllStudents();
         List<Branch>branches=branchServices.getAllBranches();
         model.addAttribute("branches",branches);
@@ -68,9 +68,9 @@ public class accountantController {
     }
     @GetMapping("/accountant/allstudent")
     public String getAllStudents(Model model,@AuthenticationPrincipal MyUserDetails userDetails){
-        if(userDetails==null){
+  /*      if(userDetails==null){
             return "redirect:/login";
-        }
+        }*/
         List<Student>students=studentServices.getAllStudents();
         List<Branch>branches=branchServices.getAllBranches();
         List<Trainer>trainers=trainerServices.getAllTrainer();
@@ -81,9 +81,9 @@ public class accountantController {
     }
     @GetMapping("/accountant/student/edit/{stdId}")
     public String AccountantEditStudent(@PathVariable("stdId")int id,Model model,RedirectAttributes rd,@AuthenticationPrincipal MyUserDetails userDetails){
-        if(userDetails==null){
+   /*     if(userDetails==null){
             return "redirect:/login";
-        }
+        }*/
         Student student=studentServices.getStudentById(id);
         String roleName=student.getRole().getName();
         int roleId=student.getRole().getRoleId();
@@ -102,7 +102,7 @@ public class accountantController {
     }
     @GetMapping("/accountant/student/delete/{stdId}")
     public String deleteStudent(@PathVariable("stdId")int id,@AuthenticationPrincipal MyUserDetails userDetails,RedirectAttributes rd,Model model){
-        if(userDetails==null)return "redirect:/login";
+      /*  if(userDetails==null)return "redirect:/login";*/
         boolean deleted=studentServices.deleteStudentById(id);
         List<Student>students=studentServices.getAllStudents();
         model.addAttribute("allstds",students);
@@ -117,7 +117,7 @@ public class accountantController {
     }
     @GetMapping("/accountant/addtrainer")
     public String getTrainer(Model model,@AuthenticationPrincipal MyUserDetails userDetails){
-        if(userDetails==null)return "redirect:/login";
+       /* if(userDetails==null)return "redirect:/login";*/
         String roleName="";
         int roleId=0;
         List<Roles>roles=rolesServices.getAllRoles();
@@ -163,7 +163,7 @@ public class accountantController {
     }
     @GetMapping("/accountant/alltrainer")
     public String getAllTrainers(Model model,@AuthenticationPrincipal MyUserDetails userDetails){
-        if(userDetails==null)return "redirect:/login";
+       /* if(userDetails==null)return "redirect:/login";*/
         List<Student>students=studentServices.getAllStudents();
         List<Branch>branches=branchServices.getAllBranches();
         List<Trainer>trainers=trainerServices.getAllTrainer();
@@ -174,7 +174,7 @@ public class accountantController {
     }
     @GetMapping("/accountant/trainer/assigncourse/{trID}")
     public String GetCoursesForTrainer(@PathVariable("trID")int id,@AuthenticationPrincipal MyUserDetails userDetails,RedirectAttributes rd,Model model){
-       if(userDetails==null)return "redirect:/login";
+    /*   if(userDetails==null)return "redirect:/login";*/
         List<Course>courses=courseServices.getAllCourses();
         model.addAttribute("courses",courses);
         List<Student>students=studentServices.getAllStudents();
@@ -224,7 +224,7 @@ public class accountantController {
     }
     @GetMapping("/accountant/trainer/delete/{tID}")
     public String DeleteTrainer(@PathVariable("tID")int id,@AuthenticationPrincipal MyUserDetails userDetails,RedirectAttributes rd){
-       if(userDetails==null)return "redirect:/login";
+     /*  if(userDetails==null)return "redirect:/login";*/
         boolean deleteTrainer=trainerServices.DeleteTrainerById(id);
         if(deleteTrainer){
             rd.addFlashAttribute("deletedTrainer","Trainer Deleted Successfully!!");
@@ -237,7 +237,7 @@ public class accountantController {
     }
     @GetMapping("/accountant/trainer/edit/{tID}")
     public String editTrainer(@PathVariable("tID")int id,Model model,@AuthenticationPrincipal MyUserDetails userDetails){
-       if(userDetails==null)return "redirect:/login";
+     /*  if(userDetails==null)return "redirect:/login";*/
         Trainer trainer=trainerServices.getTrainerById(id);
         if(trainer!=null){
             String roleName=trainer.getRole().getName();
@@ -257,7 +257,7 @@ public class accountantController {
     }
     @GetMapping("/accountant/addcourse")
     public String getAddCourse(Model model,@AuthenticationPrincipal MyUserDetails userDetails){
-        if(userDetails==null)return "redirect:/login";
+       /* if(userDetails==null)return "redirect:/login";*/
         model.addAttribute("course",new Course());
         List<Branch>branches=branchServices.getAllBranches();
         model.addAttribute("branches",branches);
@@ -279,7 +279,7 @@ public class accountantController {
     }
     @GetMapping("/accountant/course/edit/{cName}")
     public String editCourse(@PathVariable("cName")String courseName,@AuthenticationPrincipal MyUserDetails userDetails,Model model){
-       if(userDetails==null)return "redirect:/login";
+      /* if(userDetails==null)return "redirect:/login";*/
         Course course=courseServices.getCourseByName(courseName);
         List<Branch>branches=branchServices.getAllBranches();
         if(course!=null){
@@ -290,7 +290,7 @@ public class accountantController {
     }
     @GetMapping("/accountant/getallcourses")
     public String getCourses(Model model,@AuthenticationPrincipal MyUserDetails userDetails){
-        if(userDetails==null)return "redirect:/login";
+/*        if(userDetails==null)return "redirect:/login";*/
         List<Student>students=studentServices.getAllStudents();
         List<Branch>branches=branchServices.getAllBranches();
         List<Trainer>trainers=trainerServices.getAllTrainer();
@@ -303,8 +303,8 @@ public class accountantController {
         return "accountantpage";
     }
     @GetMapping("/accountant/course/delete/{cName}")
-    public String deleteCourse(@PathVariable("cName")String courseName,@AuthenticationPrincipal MyUserDetails userDetails,Model model,RedirectAttributes rd){
-       if(userDetails==null)return "redirect:/login";
+    public String deleteCourse(@PathVariable("cName")String courseName,Model model,RedirectAttributes rd){
+       /*if(userDetails==null)return "redirect:/login";*/
         List<Trainer>trainers=trainerServices.getAllTrainer();
         Course course=courseServices.getCourseByName(courseName);
         List<Branch>branchList=branchServices.getAllBranches();
