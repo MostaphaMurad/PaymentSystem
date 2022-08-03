@@ -46,23 +46,21 @@
     -->
     <ul >
         <li ><a th:href="@{/}">Home</a></li>
-        <li ><a th:href="@{/student/register}">New Registration</a></li>
         <li><a th:href="@{/accountant}">Accountant</a></li>
+        <li sec:authorize="hasAuthority('ADMIN')"><a th:href="@{/admin}">Admin Home</a></li>
         <li ><a th:href="@{#}">Contact us</a></li>
         <li th:ref="navbar-item" sec:authorize="!isAuthenticated()">
             <a th:href="@{/login}">Login</a>
         </li>
-        <div class="container">
+        <div  style="float: right">
             <li>
-                <a href="#">Logged as : </a>
+                <span class="text-center mt-3" style="float: left;color: blue">Logged as </span>  <a style="float: right" href="#" th:text=" ${#authentication.getPrincipal().getFnameLoggedUser}"></a>
             </li>
-            <!-- <li>
-                 <a href="#" th:text=" ${#authentication.getPrincipal().getFnameLoggedUser}"></a>
-             </li>-->
+
+            <li>
+                <a sec:authorize="isAuthenticated()" th:href="@{logout}">Logout</a>
+            </li>
         </div>
-        <li>
-            <a sec:authorize="isAuthenticated()" th:href="@{logout}">Logout</a>
-        </li>
     </ul>
     <div class="alert alert-success" role="alert" th:text="${deletedStudent}" th:if="${deletedStudent}"></div>
     <div class="alert alert-danger" role="alert" th:text="${faildDeletingStudent}" th:if="${faildDeletingStudent}"></div>
@@ -106,6 +104,8 @@
             <a style="float:  right" th:href="@{/student/register}">Add Student</a>
             <a style="float: right "  class="mr-2" th:href="@{/accountant/addtrainer}">Add Trainer</a>
             <a style="float: right "  class="mr-2" th:href="@{/accountant/addcourse}">Add Course</a>
+           <a style="float: right" class="mr-2" th:href="@{/student/register}">Add Student</a>
+
         </div>
 
     </div>

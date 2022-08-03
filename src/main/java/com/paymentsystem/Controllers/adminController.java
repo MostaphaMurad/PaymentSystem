@@ -3,12 +3,14 @@ import com.paymentsystem.Models.Accountant;
 import com.paymentsystem.Models.Branch;
 import com.paymentsystem.Models.Roles;
 import com.paymentsystem.Models.Student;
+import com.paymentsystem.Security.MyUserDetails;
 import com.paymentsystem.Services.AccountantServices;
 import com.paymentsystem.Services.BranchServices;
 import com.paymentsystem.Services.RolesServices;
 import com.paymentsystem.Services.StudentServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.Banner;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,7 +29,10 @@ public class adminController {
     @Autowired private AccountantServices accountantServices;
     @Autowired private RolesServices rolesServices;
     @GetMapping("/admin")
-    public String adminHome(Model model){
+    public String adminHome(Model model, @AuthenticationPrincipal MyUserDetails userDetails){
+        if(userDetails==null){
+            return "redirect:/login";
+        }
         List<Branch>branches=branchServices.getAllBranches();
         model.addAttribute("branches",branches);
         model.addAttribute("branch",new Branch());

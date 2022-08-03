@@ -44,6 +44,14 @@ public class Course {
         this.trainers.remove(trainer);
         trainer.getCourses().remove(this);
     }
+    public void removeBranch(Branch branch){
+        this.branches.remove(branch);
+        branch.getCourses().remove(this);
+    }
+    public void removeStudent(Student student){
+        this.students.remove(student);
+        student.getCourses().remove(this);
+    }
     public String getName() {
         return name;
     }

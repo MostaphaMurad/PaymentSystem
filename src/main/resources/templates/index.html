@@ -56,17 +56,15 @@
         <li th:ref="navbar-item" sec:authorize="!isAuthenticated()">
             <a th:href="@{/login}">Login</a>
         </li>
-        <div class="container">
+        <div  style="float: right">
             <li>
-                <a href="#">Logged as : </a>
+                <span class="text-center mt-3" style="float: left;color: blue">Logged as </span>  <a style="float: right" href="#" th:text=" ${#authentication.getPrincipal().getFnameLoggedUser}"></a>
             </li>
-          <!--  <li>
-                <a href="#" th:text=" ${#authentication.getPrincipal().getFnameLoggedUser}"></a>
-            </li>-->
+
+            <li>
+                <a sec:authorize="isAuthenticated()" th:href="@{logout}">Logout</a>
+            </li>
         </div>
-        <li>
-            <a sec:authorize="isAuthenticated()" th:href="@{logout}">Logout</a>
-        </li>
 
     </ul>
 

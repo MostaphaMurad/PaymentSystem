@@ -47,7 +47,7 @@
   <ul >
     <li ><a th:href="@{/}">Home</a></li>
     <li ><a th:href="@{/student/register}">New Registration</a></li>
-    <li ><a th:href="@{/admin}">Administrator Home Page</a></li>
+    <li ><a sec:authorize="hasAuthority('ADMIN')" th:href="@{/admin}">Administrator Home Page</a></li>
     <li sec:authorize="hasAnyAuthority('ADMIN','ACCOUNTANT')">
       <a th:href="@{/accountant}">Accountant Home Page</a>
     </li>
@@ -56,21 +56,11 @@
   </ul>
 </div>
 <div class="container" style="background-color: white">
-  <div class="text-center">
-    <h1 class="h3"><a th:href="@{/admin/login}">Login as administrator</a></h1>
-  </div>
   <div style="height: 200px">
     <h4 class="h4" style="color: blue">Login form</h4>
 
     <form th:action="@{/login}" method="post" >
 
-      <label for="branches">Choose Branch</label>
-
-      <select name="branch" id="branches">
-        <th:block th:each="b:${branches}">
-          <option th:name="branch" th:value="${b.name}">[[${b.name}]]</option>
-        </th:block>
-      </select><br>
       <label>Email:   </label> <input type="email" th:name="email" placeholder="Your Email" required><br>
       <label>Password:</label>  <input type="password" th:name="password" placeholder="Your Password" required><br>
       <input class="btn btn-success" type="submit" value="Login"><br>

@@ -46,46 +46,48 @@
 -->
     <ul >
         <li ><a th:href="@{/}">Home</a></li>
-        <li ><a th:href="@{/student/register}">New Registration</a></li>
+        <li ><a th:href="@{/student/register}">Add Student</a></li>
         <li ><a th:href="@{/admin}">Administrator</a></li>
         <li ><a th:href="@{#}">Contact us</a></li>
         <li th:ref="navbar-item" sec:authorize="!isAuthenticated()">
             <a th:href="@{/login}">Login</a>
         </li>
-        <div class="container">
+        <div  style="float: right">
             <li>
-                <a href="#">Logged as : </a>
+                <span class="text-center mt-3" style="float: left;color: blue">Logged as </span>  <a style="float: right" href="#" th:text=" ${#authentication.getPrincipal().getFnameLoggedUser}"></a>
             </li>
-           <!-- <li>
-                <a href="#" th:text=" ${#authentication.getPrincipal().getFnameLoggedUser}"></a>
-            </li>-->
+
+            <li>
+                <a sec:authorize="isAuthenticated()" th:href="@{logout}">Logout</a>
+            </li>
         </div>
-        <li>
-            <a sec:authorize="isAuthenticated()" th:href="@{logout}">Logout</a>
-        </li>
     </ul>
     <div class="alert alert-success" role="alert" th:text="${deletedStudent}" th:if="${deletedStudent}"></div>
     <div class="alert alert-danger" role="alert" th:text="${faildDeletingStudent}" th:if="${faildDeletingStudent}"></div>
     <div class="alert alert-success" role="alert" th:text="${branchAdded}" th:if="${branchAdded}"></div>
     <div class="alert alert-danger" role="alert" th:text="${faildBranchAdded}" th:if="${faildBranchAdded}"></div>
 
-    <div  class="container justify-content-center align-content-center text-center pt-5" style="background-color: white;height: 200px">
-        <div class="container align-content-center justify-content-center" >
-            <form th:action="@{/admin/find}" method="post">
-                <label for="branches">Choose Branch</label>
-                <select name="branch" id="branches">
-                    <th:block th:each="b:${branches}">
-                        <option th:name="branch" th:value="${b.name}">[[${b.name}]]</option>
-                    </th:block>
-                </select><br>
-                <input type="search" th:name="search" placeholder="Accountant or Student Name">
-                <input class="btn btn-secondary btn-primary" type="submit" value="Search">
+    <div  class="container text-center justify-content-center align-content-center text-center pt-5" style="background-color: white;height: 200px">
+        <div class="row" >
+            <div class="col-12">
+                <form th:action="@{/admin/find}" method="post">
+                    <label for="branches">Choose Branch</label>
+                    <select name="branch" id="branches">
+                        <th:block th:each="b:${branches}">
+                            <option th:name="branch" th:value="${b.name}">[[${b.name}]]</option>
+                        </th:block>
+                    </select><br>
+                    <input type="search" th:name="search" placeholder="Accountant or Student Name">
+                    <input class="btn btn-secondary btn-primary" type="submit" value="Search">
 
-                <a th:href="@{/admin/createaccountant}">Add Accountant</a>
-            </form>
+                    <a th:href="@{/admin/createaccountant}">Add Accountant</a>
+                </form>
+            </div>
+
         </div>
 
-        <div class="container justify-content-center align-content-center">
+        <div class="container text-center justify-content-center align-content-center">
+
             <form th:action="@{/admin/allstudent}" method="get">
                 <input style="display: inline;float: right"  type="submit" class="btn btn-secondary btn-success"  value="Show All Students">
             </form>
@@ -121,7 +123,6 @@
                 <th scope="col">Fee</th>
                 <th scope="col">Balance</th>
                 <th scope="col">Branch</th>
-                <th scope="col">Role</th>
                 <th scope="col">Phone</th>
                 <th scope="col">Action</th>
                 <th></th>
@@ -139,7 +140,6 @@
                     <td>[[${std.fee}]]</td>
                     <td>[[${std.balance}]]</td>
                     <td>[[${std.branch.name}]]</td>
-                    <td>[[${std.role.name}]]</td>
                     <td>[[${std.mobile}]]</td>
                     <td sec:authorize="hasAuthority('ADMIN')">
                         <a class="h4 pr-1 text-primary" th:href="@{'/admin/student/edit/' +${std.id}}">Edit </a>
@@ -170,7 +170,6 @@
                 <th scope="col">Last Name</th>
                 <th scope="col">Salary</th>
                 <th scope="col">Branch</th>
-                <th scope="col">Role</th>
                 <th scope="col">Action</th>
                 <th></th>
             </tr>
@@ -186,7 +185,6 @@
                     <td>[[${acc.lname}]]</td>
                     <td>[[${acc.salary}]]</td>
                     <td>[[${acc.branch.name}]]</td>
-                    <td>[[${acc.role.name}]]</td>
                     <td sec:authorize="hasAuthority('ADMIN')">
                         <a class="h4 pr-1 text-primary" th:href="@{'/admin/accountant/edit/' +${acc.id}}">Edit </a>
                         <a class="h4 text-danger" th:href="@{'/admin/accountant/delete/' +${acc.id}}">Delete</a>
@@ -213,7 +211,6 @@
                 <th scope="col">Fee</th>
                 <th scope="col">Balance</th>
                 <th scope="col">Branch</th>
-                <th scope="col">Role</th>
                 <th scope="col">Phone</th>
                 <th scope="col">Action</th>
                 <th></th>
@@ -231,7 +228,6 @@
                     <td>[[${std.fee}]]</td>
                     <td>[[${std.balance}]]</td>
                     <td>[[${std.branch.name}]]</td>
-                    <td>[[${std.role.name}]]</td>
                     <td>[[${std.mobile}]]</td>
                     <td sec:authorize="hasAuthority('ADMIN')">
                         <a class="h4 pr-1 text-primary" th:href="@{'/admin/student/edit/' +${std.id}}">Edit </a>
@@ -258,7 +254,6 @@
                 <th scope="col">Last Name</th>
                 <th scope="col">Salary</th>
                 <th scope="col">Branch</th>
-                <th scope="col">Role</th>
                 <th scope="col">Action</th>
                 <th></th>
             </tr>
@@ -274,7 +269,6 @@
                     <td>[[${acc.lname}]]</td>
                     <td>[[${acc.salary}]]</td>
                     <td>[[${acc.branch.name}]]</td>
-                    <td>[[${acc.role.name}]]</td>
                     <td sec:authorize="hasAuthority('ADMIN')">
                         <a class="h4 pr-1 text-primary" th:href="@{'/admin/accountant/edit/' +${acc.id}}">Edit </a>
                         <a class="h4 text-danger" th:href="@{'/admin/accountant/delete/' +${acc.id}}">Delete</a>

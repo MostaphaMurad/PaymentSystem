@@ -4,12 +4,19 @@ import com.paymentsystem.Models.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
+@Component
 public class MyUserDetails implements UserDetails {
+    private MyUserDetails userDetails;
+
+    public  MyUserDetails(){}
+    public MyUserDetails(MyUserDetails userDetails){
+        this.userDetails=userDetails;
+    }
     private Admin admin=new Admin();
     private Accountant accountant=new Accountant();
     private User user=new User();
