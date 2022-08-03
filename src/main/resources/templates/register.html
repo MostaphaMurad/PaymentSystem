@@ -100,6 +100,11 @@
             <input required  class="form-control-sm mr-5"  id="mobile" type="text" size="50" th:field="*{mobile}" placeholder="Phone Number" ><br>
 
         </p>
+        <p>
+            <label for="balance">Balance</label>
+            <input required  class="form-control-sm mr-5"  id="balance" type="text" size="50" th:field="*{balance}" placeholder="Your Balance" ><br>
+
+        </p>
         <label for="branches">Choose Branch</label>
         <select required name="branch" id="branches">
             <th:block th:each="b:${branches}">

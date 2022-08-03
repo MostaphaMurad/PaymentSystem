@@ -45,17 +45,17 @@
   <div class="alert alert-danger" role="alert" th:text="${LoginFirst}" th:if="${LoginFirst}"></div>
 
   <ul >
-    <li ><a th:href="@{/}">Home</a></li>
-    <li ><a th:href="@{/student/register}">New Registration</a></li>
-    <li ><a sec:authorize="hasAuthority('ADMIN')" th:href="@{/admin}">Administrator Home Page</a></li>
+    <li ><a th:href="@{/home/viewdetails}">Our Services</a></li>
+    <li ><a th:href="@{/student/register}">Register</a></li>
+    <li ><a sec:authorize="hasAuthority('ADMIN')" th:href="@{/admin}">Administrator Home</a></li>
     <li sec:authorize="hasAnyAuthority('ADMIN','ACCOUNTANT')">
-      <a th:href="@{/accountant}">Accountant Home Page</a>
+      <a th:href="@{/accountant}">Accountant Home</a>
     </li>
     <li ><a th:href="@{#}">Contact us</a></li>
 
   </ul>
 </div>
-<div class="container" style="background-color: white">
+<div class="container text-center justify-content-center align-content-center" style="background-color: white">
   <div style="height: 200px">
     <h4 class="h4" style="color: blue">Login form</h4>
 

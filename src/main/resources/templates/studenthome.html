@@ -39,8 +39,7 @@
 </style>
 <body>
 <ul >
-    <li ><a th:href="@{/}">Home</a></li>
-    <li ><a th:href="@{/student/register}">New Registration</a></li>
+    <li><a th:href="@{/student/register}">New Registration</a></li>
     <li ><a th:href="@{#}">Contact us</a></li>
     <li th:ref="navbar-item" sec:authorize="!isAuthenticated()">
         <a th:href="@{/login}">Login</a>
@@ -61,6 +60,8 @@
     <div class="alert alert-danger" role="alert" th:text="${FaildEnroll}" th:if="${FaildEnroll}"></div>
     <div class="alert alert-success" role="alert" th:text="${CourseRemoved}" th:if="${CourseRemoved}"></div>
     <div class="alert alert-success" role="alert" th:text="${CourseRemovedFaild}" th:if="${CourseRemovedFaild}"></div>
+    <div class="alert alert-danger" role="alert" th:text="${NoBalance}" th:if="${NoBalance}"></div>
+    <div class="alert alert-danger" role="alert" th:text="${CantBeEmpty}" th:if="${CantBeEmpty}"></div>
 
     <div class="row">
         <div class="col-12">
@@ -71,7 +72,7 @@
                             <option th:value="${c.name}" th:name="course">[[${c.name}]]</option>
                         </th:block>
                     </select>
-                    <th sec:authorize="hasAnyAuthority('STUDENT','ADMIN','ACOUNTANT')"><input class="btn btn-success" type="submit" value="Enroll Course"></th>
+                    <input class="btn btn-success" type="submit" value="Enroll Course">
 
             </form>
         </div>
@@ -87,6 +88,8 @@
             <th scope="col">Course Price</th>
             <th scope="col">Course Duration</th>
             <th scope="col">Course Trainers</th>
+            <th scope="col">Your Balance</th>
+            <th scope="col">Your Branch</th>
             <th scope="col">Action</th>
             <th></th>
         </tr>
@@ -99,9 +102,16 @@
                 <td>[[${c.name}]]</td>
                 <td>[[${c.courseSalary}]]</td>
                 <td>[[${c.courseDuration}]]</td>
+
                 <td>
                     <th:block th:each="tr:${c.trainers}">
                         [[${tr.fname}]],
+                    </th:block>
+                </td>
+                <td>[[${std.balance}]]</td>
+                <td>
+                    <th:block th:each="stdbranch:${std}">
+                        [[${stdbranch.branch.name}]]
                     </th:block>
                 </td>
                 <td sec:authorize="hasAnyAuthority('STUDENT','ADMIN','ACCOUNTANT')">

@@ -61,6 +61,7 @@
     <h2 class="h2" style="color: blue">Please Fill the Below Fields</h2>
     <div class="alert alert-danger" role="alert" th:text="${ErrorAddingTrainer}" th:if="${ErrorAddingTrainer}"></div>
     <div class="alert alert-success" role="alert" th:text="${TrainedAdded}" th:if="${TrainedAdded}"></div>
+    <div class="alert alert-danger" role="alert" th:text="${TrainerAssignedCourseNotValidNumber}" th:if="${TrainerAssignedCourseNotValidNumber}"></div>
 
     <form  th:action="@{/accountant/savetrainer}" method="post" th:object="${trainer}" modelAttribute="trainer">
         <input hidden type="text" name="id" th:field="*{id}" >

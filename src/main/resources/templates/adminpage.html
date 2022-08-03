@@ -47,7 +47,7 @@
     <ul >
         <li ><a th:href="@{/}">Home</a></li>
         <li ><a th:href="@{/student/register}">Add Student</a></li>
-        <li ><a th:href="@{/admin}">Administrator</a></li>
+        <li ><a th:href="@{/admin}">Admin</a></li>
         <li ><a th:href="@{#}">Contact us</a></li>
         <li th:ref="navbar-item" sec:authorize="!isAuthenticated()">
             <a th:href="@{/login}">Login</a>

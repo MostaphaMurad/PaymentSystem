@@ -71,6 +71,7 @@
     <div class="alert alert-danger" role="alert" th:text="${FailedsaveCourse}" th:if="${FailedsaveCourse}"></div>
     <div class="alert alert-success" role="alert" th:text="${CourseDeleted}" th:if="${CourseDeleted}"></div>
     <div class="alert alert-danger" role="alert" th:text="${FaildDeleteCourse}" th:if="${FaildDeleteCourse}"></div>
+    <div class="alert alert-danger" role="alert" th:text="${FaildAssignedCourses}" th:if="${FaildAssignedCourses}"></div>
 
     <div  class="container justify-content-center align-content-center text-center pt-5" style="background-color: white;height: 200px">
 
@@ -91,9 +92,9 @@
 
         <div class="container align-content-center justify-content-center" >
             <form th:action="@{/accountant/find}" method="post">
-                <label for="branches">Choose Branch</label>
+                <label for="branches">Accountant Branch</label>
                 <select name="branch" id="branches">
-                    <th:block th:each="b:${branches}">
+                    <th:block th:each="b:${branch}">
                         <option th:name="branch" th:value="${b.name}">[[${b.name}]]</option>
                     </th:block>
                 </select><br>
@@ -101,17 +102,14 @@
                 <input class="btn btn-secondary btn-primary" type="submit" value="Search">
 
             </form>
-            <a style="float:  right" th:href="@{/student/register}">Add Student</a>
             <a style="float: right "  class="mr-2" th:href="@{/accountant/addtrainer}">Add Trainer</a>
             <a style="float: right "  class="mr-2" th:href="@{/accountant/addcourse}">Add Course</a>
-           <a style="float: right" class="mr-2" th:href="@{/student/register}">Add Student</a>
+           <a style="float: right" class="mr-2" th:href="@{/accountant/student/register}">Add Student</a>
 
         </div>
 
     </div>
     </div>
-
-
 
     <div class="container text-center" style="background-color: white">
         <h2  class="h2" style="color: red;float: left">Found Student</h2>
@@ -151,8 +149,6 @@
                     <td sec:authorize="hasAnyAuthority('ADMIN','ACCOUNTANT')">
                         <a class="h6 pr-1 text-primary" th:href="@{'/accountant/student/edit/' +${std.id}}">Edit </a>
                         <a class="h6 text-danger" th:href="@{'/accountant/student/delete/' +${std.id}}">Delete</a>
-                        <a class="h6 text-danger" style="color: green!important;display: inline-flex" th:href="@{'/accountant/student/enroll/' +${std.id}}">Join Course</a>
-
                     </td>
 
                     <td></td>
@@ -197,7 +193,6 @@
                     <td sec:authorize="hasAnyAuthority('ADMIN','ACCOUNTANT')">
                         <a class="h6 pr-1 text-primary" th:href="@{'/accountant/student/edit/' +${std.id}}">Edit </a>
                         <a class="h6 text-danger" th:href="@{'/accountant/student/delete/' +${std.id}}">Delete</a>
-                        <a class="h6 text-danger" style="color: green!important;display: inline-flex" th:href="@{'/accountant/student/enroll/' +${std.id}}">Join Course</a>
                     </td>
 
                     <td></td>

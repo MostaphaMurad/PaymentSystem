@@ -13,6 +13,7 @@ import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
+import javax.management.relation.Role;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,40 +30,70 @@ public class accountantController {
     @GetMapping("/accountant")
     public String getAccountant(Model model,@AuthenticationPrincipal MyUserDetails userDetails){
        /* if(userDetails==null)return "redirect:/login";*/
+        String loggedAccountantBranch=userDetails.getAccountantBranch();
+        Branch acountantBranch=branchServices.getBranchByName(loggedAccountantBranch);
         List<Student> students=studentServices.getAllStudents();
-        List<Branch>branches=branchServices.getAllBranches();
-        model.addAttribute("branches",branches);
         List<Course>courses=courseServices.getAllCourses();
-        model.addAttribute("courses",courses);
+        List<Student>stdInAccBranch=new ArrayList<>();
+        for(Student s:students){
+            if(s.getBranch().getName().equals(loggedAccountantBranch)){
+                stdInAccBranch.add(s);
+            }
+        }
+        List<Course>coursesInAccountantBranch=new ArrayList<>();
+        for(Course course:courses){
+            if(course.getBranches().contains(acountantBranch)){
+                coursesInAccountantBranch.add(course);
+            }
+        }
+       // List<Branch>branches=branchServices.getAllBranches();
+        model.addAttribute("branch",acountantBranch);
+        model.addAttribute("allstds",stdInAccBranch);
+        model.addAttribute("courses",coursesInAccountantBranch);
         model.addAttribute("course",new Course());
         return "accountantpage";
     }
-
+    @GetMapping("/accountant/student/register")
+    public String addNewStudent(Model model,@AuthenticationPrincipal MyUserDetails userDetails){
+        String loggedAccBranch=userDetails.getAccountantBranch();
+        Branch accBranch=branchServices.getBranchByName(loggedAccBranch);
+        Roles role=rolesServices.GetRoleByName("STUDENT");
+        String roleName=role.getName();
+        int roleId=role.getRoleId();
+        model.addAttribute("roleName",roleName);
+        model.addAttribute("roleId",roleId);
+        model.addAttribute("branches",accBranch);
+        model.addAttribute("student",new Student());
+        return "register";
+    }
     @PostMapping("/accountant/find")
-    public View findMethod(@RequestParam("search")String name, @RequestParam("branch")String branch, RedirectAttributes model, @AuthenticationPrincipal MyUserDetails userDetails){
+    public String findMethod(@RequestParam("search")String name, @RequestParam("branch")String branch, RedirectAttributes model, @AuthenticationPrincipal MyUserDetails userDetails){
+
         List<Student>students=studentServices.getAllStds(name,branch);
         model.addAttribute("stds",students);
         model.addAttribute("branch",branch);
-        System.out.println(userDetails.getAccountantBranch());
-        return new RedirectView( "accountantpage");
+        return "redirect:/accountant/accountantpage";
     }
     @GetMapping("/accountant/accountantpage")
-    public String foundAccountantOrStudent(@ModelAttribute("stds") ArrayList<Student> students, Model model, RedirectAttributes rd){
-        List<Student>gotStds = null;
-        List<Branch>branches=branchServices.getAllBranches();
-        model.addAttribute("branches",branches);
+    public String foundAccountantOrStudent(@ModelAttribute("stds") ArrayList<Student> students,@AuthenticationPrincipal MyUserDetails userDetails, Model model, RedirectAttributes rd){
+        String loggedBranch=userDetails.getAccountantBranch();
+        Branch accBranch=branchServices.getBranchByName(loggedBranch);
+        List<Student>gotStds = accBranch.getStudents();
+        //List<Branch>branches=branchServices.getAllBranches();
+        model.addAttribute("branch",accBranch);
         if(students!=null) {
-            System.out.println("here dooog not null student get method ");
             gotStds=new ArrayList<>();
             for(Student s:students)
                 gotStds.add(s);
         }
         if(gotStds.size()==0){
 
+            model.addAttribute("branch",accBranch);
             rd.addFlashAttribute("error","Invalid Student Name");
-            return "redirect:/accountant";
+            return "accountantpage";
         }else {
             model.addAttribute("stds", gotStds);
+            model.addAttribute("branch",accBranch);
             return "accountantpage";
         }
     }
@@ -71,27 +102,47 @@ public class accountantController {
   /*      if(userDetails==null){
             return "redirect:/login";
         }*/
-        List<Student>students=studentServices.getAllStudents();
-        List<Branch>branches=branchServices.getAllBranches();
+        String loggedBranch=userDetails.getAccountantBranch();
+        Branch branch=branchServices.getBranchByName(loggedBranch);
+        List<Student> students=studentServices.getAllStudents();
+        List<Course>courses=courseServices.getAllCourses();
+        List<Student>stdInAccBranch=new ArrayList<>();
+        for(Student s:students){
+            if(s.getBranch().equals(branch)){
+                stdInAccBranch.add(s);
+            }
+        }
+        List<Course>coursesInAccountantBranch=new ArrayList<>();
+        for(Course course:courses){
+            if(course.getBranches().contains(branch)){
+                coursesInAccountantBranch.add(course);
+            }
+        }
         List<Trainer>trainers=trainerServices.getAllTrainer();
-        model.addAttribute("allstds",students);
-        model.addAttribute("branches",branches);
-        model.addAttribute("trainers",trainers);
+        List<Trainer>trainersInAccBranch=new ArrayList<>();
+        for(Trainer trainer:trainers){
+            if(trainer.getBranches().contains(branch)){
+                trainersInAccBranch.add(trainer);
+            }
+        }
+        model.addAttribute("allstds",stdInAccBranch);
+        model.addAttribute("branch",branch);
+        model.addAttribute("courses",coursesInAccountantBranch);
+        model.addAttribute("trainers",trainersInAccBranch);
         return "accountantpage";
     }
     @GetMapping("/accountant/student/edit/{stdId}")
     public String AccountantEditStudent(@PathVariable("stdId")int id,Model model,RedirectAttributes rd,@AuthenticationPrincipal MyUserDetails userDetails){
-   /*     if(userDetails==null){
-            return "redirect:/login";
-        }*/
         Student student=studentServices.getStudentById(id);
         String roleName=student.getRole().getName();
         int roleId=student.getRole().getRoleId();
-        List<Branch>branches=branchServices.getAllBranches();
+
+        String loggedBranch=userDetails.getAccountantBranch();
+        Branch accBranch=branchServices.getBranchByName(loggedBranch);
         if(student!=null){
             model.addAttribute("roleName",roleName);
             model.addAttribute("roleId",roleId);
-            model.addAttribute("branches",branches);
+            model.addAttribute("branches",accBranch);
             model.addAttribute("student",student);
             return "register";
         }
@@ -102,7 +153,6 @@ public class accountantController {
     }
     @GetMapping("/accountant/student/delete/{stdId}")
     public String deleteStudent(@PathVariable("stdId")int id,@AuthenticationPrincipal MyUserDetails userDetails,RedirectAttributes rd,Model model){
-      /*  if(userDetails==null)return "redirect:/login";*/
         boolean deleted=studentServices.deleteStudentById(id);
         List<Student>students=studentServices.getAllStudents();
         model.addAttribute("allstds",students);
@@ -117,7 +167,8 @@ public class accountantController {
     }
     @GetMapping("/accountant/addtrainer")
     public String getTrainer(Model model,@AuthenticationPrincipal MyUserDetails userDetails){
-       /* if(userDetails==null)return "redirect:/login";*/
+        String loggedBranch=userDetails.getAccountantBranch();
+        Branch accBranch=branchServices.getBranchByName(loggedBranch);
         String roleName="";
         int roleId=0;
         List<Roles>roles=rolesServices.getAllRoles();
@@ -128,13 +179,18 @@ public class accountantController {
                 break;
             }
         }
-        List<Branch>branches=branchServices.getAllBranches();
         List<Course>courses=courseServices.getAllCourses();
-        model.addAttribute("brns",branches);
+        List<Course>coursesInThisBranch=new ArrayList<>();
+        for(Course course:courses){
+            if(course.getBranches().contains(accBranch)){
+                coursesInThisBranch.add(course);
+            }
+        }
+        model.addAttribute("brns",accBranch);
         model.addAttribute("trainer",new Trainer());
         model.addAttribute("roleName",roleName);
         model.addAttribute("roleId",roleId);
-        model.addAttribute("courses",courses);
+        model.addAttribute("courses",coursesInThisBranch);
         return "addtrainer";
     }
     @PostMapping("/accountant/savetrainer")
@@ -144,13 +200,23 @@ public class accountantController {
         String encPassword=encoder.encode(plainPassword);
         trainer.setPassword(encPassword);
         ArrayList<Branch>branches=new ArrayList<>();
-        Branch b=new Branch();
-        b.setName(bran);
-        b.setTrainers(Collections.singleton(trainer));
-        trainer.setBranches(Collections.singleton(b));
-        trainer.setCourses(courseList);
+        Branch branch=branchServices.getBranchByName(bran);
+        branch.setTrainers(Collections.singleton(trainer));
+        trainer.setBranches(Collections.singleton(branch));
+        if(trainer.getMaxCourses()>=courseList.size()){
+            trainer.setCourses(courseList);
+            int dif=trainer.getMaxCourses()-courseList.size();
+            trainer.setMaxCourses(dif);
+            if(dif==0){
+                trainer.setAvailable(false);
+            }
+
+        }
+        else{
+            rd.addFlashAttribute("TrainerAssignedCourseNotValidNumber","You Cant Assign More Courses");
+            return "redirect:/accountant/addtrainer";
+        }
         boolean saved=trainerServices.addNewTrainer(trainer);
-        System.out.println(bran);
 
         if(saved){
             rd.addFlashAttribute("TrainedAdded","Trainer Added Successfully!!");
@@ -163,26 +229,37 @@ public class accountantController {
     }
     @GetMapping("/accountant/alltrainer")
     public String getAllTrainers(Model model,@AuthenticationPrincipal MyUserDetails userDetails){
-       /* if(userDetails==null)return "redirect:/login";*/
+        String loggedAccBranch=userDetails.getAccountantBranch();
+        Branch accBranch=branchServices.getBranchByName(loggedAccBranch);
         List<Student>students=studentServices.getAllStudents();
         List<Branch>branches=branchServices.getAllBranches();
         List<Trainer>trainers=trainerServices.getAllTrainer();
-        model.addAttribute("trainers",trainers);
-       model.addAttribute("allstds",students);
-        model.addAttribute("branches",branches);
+        List<Student>stdsInAccBranch=new ArrayList<>();
+        List<Trainer>trainersInAccBranch=new ArrayList<>();
+        for(Student s:students){
+            if(s.getBranch().equals(accBranch)){
+                stdsInAccBranch.add(s);
+            }
+        }
+        for(Trainer trainer:trainers){
+            if(trainer.getBranches().contains(accBranch)){
+                trainersInAccBranch.add(trainer);
+            }
+        }
+        model.addAttribute("trainers",trainersInAccBranch);
+       model.addAttribute("allstds",stdsInAccBranch);
+        model.addAttribute("branch",accBranch);
         return "accountantpage";
     }
     @GetMapping("/accountant/trainer/assigncourse/{trID}")
     public String GetCoursesForTrainer(@PathVariable("trID")int id,@AuthenticationPrincipal MyUserDetails userDetails,RedirectAttributes rd,Model model){
-    /*   if(userDetails==null)return "redirect:/login";*/
-        List<Course>courses=courseServices.getAllCourses();
-        model.addAttribute("courses",courses);
-        List<Student>students=studentServices.getAllStudents();
-        List<Branch>branches=branchServices.getAllBranches();
-        List<Trainer>trainers=trainerServices.getAllTrainer();
-        model.addAttribute("trainers",trainers);
-        model.addAttribute("allstds",students);
-        model.addAttribute("branches",branches);
+        String loggedBranch=userDetails.getAccountantBranch();
+        Branch accBranch=branchServices.getBranchByName(loggedBranch);
+
+        Set<Course>coursesInThisBranch=accBranch.getCourses();
+
+        model.addAttribute("courses",coursesInThisBranch);
+        model.addAttribute("branches",accBranch);
         Trainer trainer=trainerServices.getTrainerById(id);
         model.addAttribute("trainer",trainer);
         return "trainercourse";
@@ -193,10 +270,10 @@ public class accountantController {
       Trainer trainer1=trainerServices.getTrainerById(id);
       Set<Course>old=trainer1.getCourses();
         if(trainer1!=null){
-            if(trainer.getMaxCourses()<=courses.size()+old.size()){
-                int dif=trainer1.getMaxCourses()-courses.size();
+            if(trainer.getMaxCourses()>=courses.size()+old.size()){
+                int dif=trainer1.getMaxCourses()-(courses.size()+old.size());
                 trainer1.setMaxCourses(dif);
-                if(dif==0)trainer1.setAvailable(false);
+                if(dif<=0)trainer1.setAvailable(false);
                 for(Course course:courses){
                     old.add(course);
                 }
@@ -208,18 +285,18 @@ public class accountantController {
                 }
                 else{
                     rd.addFlashAttribute("FaildAssignedCourses","Assigned Courses Failed!!");
-                    return "trainercourse";
+                    return "redirect:/accountant";
                 }
             }
             else {
                 rd.addFlashAttribute("FaildAssignedCourses", "Assigned Courses Failed!!");
-                return "trainercourse";
+                return "redirect:/accountant";
             }
 
         }
         else{
             rd.addFlashAttribute("FaildAssignedCourses","Assigned Courses Failed!!");
-            return "trainercourse";
+            return "redirect:/accountant";
         }
     }
     @GetMapping("/accountant/trainer/delete/{tID}")
@@ -237,15 +314,18 @@ public class accountantController {
     }
     @GetMapping("/accountant/trainer/edit/{tID}")
     public String editTrainer(@PathVariable("tID")int id,Model model,@AuthenticationPrincipal MyUserDetails userDetails){
-     /*  if(userDetails==null)return "redirect:/login";*/
+        String loggedBranch=userDetails.getAccountantBranch();
+        Branch accBranch=branchServices.getBranchByName(loggedBranch);
+
+        Set<Course>coursesInThisBranch=accBranch.getCourses();
+
+
         Trainer trainer=trainerServices.getTrainerById(id);
         if(trainer!=null){
             String roleName=trainer.getRole().getName();
             int roleId=trainer.getRole().getRoleId();
-            List<Branch>branches=branchServices.getAllBranches();
-            List<Course>courses=courseServices.getAllCourses();
-            model.addAttribute("brns",branches);
-            model.addAttribute("courses",courses);
+            model.addAttribute("brns",accBranch);
+            model.addAttribute("courses",coursesInThisBranch);
             model.addAttribute("roleName",roleName);
             model.addAttribute("roleId",roleId);
             model.addAttribute("trainer",trainer);
@@ -258,14 +338,14 @@ public class accountantController {
     @GetMapping("/accountant/addcourse")
     public String getAddCourse(Model model,@AuthenticationPrincipal MyUserDetails userDetails){
        /* if(userDetails==null)return "redirect:/login";*/
+        String loggedAccBranch=userDetails.getAccountantBranch();
+        Branch accBranch=branchServices.getBranchByName(loggedAccBranch);
         model.addAttribute("course",new Course());
-        List<Branch>branches=branchServices.getAllBranches();
-        model.addAttribute("branches",branches);
+        model.addAttribute("branches",accBranch);
         return "addcourse";
     }
     @PostMapping("/accountant/course/addcourse")
     public String addCourse(@ModelAttribute("course")Course course,@RequestParam("branch")Set<Branch> branchsName,Model model,RedirectAttributes rd){
-        System.out.println("HERE DOOOOG!!"+branchsName);
         course.setBranches(branchsName);
         Boolean saved=courseServices.addNewCourse(course);
         if(saved){
@@ -279,38 +359,66 @@ public class accountantController {
     }
     @GetMapping("/accountant/course/edit/{cName}")
     public String editCourse(@PathVariable("cName")String courseName,@AuthenticationPrincipal MyUserDetails userDetails,Model model){
-      /* if(userDetails==null)return "redirect:/login";*/
+       String loggedBranch=userDetails.getAccountantBranch();
+       Branch accBranch=branchServices.getBranchByName(loggedBranch);
+
         Course course=courseServices.getCourseByName(courseName);
-        List<Branch>branches=branchServices.getAllBranches();
+
         if(course!=null){
             model.addAttribute("course",course);
-            model.addAttribute("branches",branches);
+            model.addAttribute("branches",accBranch);
             return "addcourse";
         }else return "redirect:/accountant";
     }
     @GetMapping("/accountant/getallcourses")
     public String getCourses(Model model,@AuthenticationPrincipal MyUserDetails userDetails){
 /*        if(userDetails==null)return "redirect:/login";*/
+        String loggedAccBranch=userDetails.getAccountantBranch();
+        Branch accBranch=branchServices.getBranchByName(loggedAccBranch);
+
         List<Student>students=studentServices.getAllStudents();
         List<Branch>branches=branchServices.getAllBranches();
         List<Trainer>trainers=trainerServices.getAllTrainer();
-        model.addAttribute("trainers",trainers);
-        model.addAttribute("allstds",students);
-        model.addAttribute("branches",branches);
         List<Course> courses=courseServices.getAllCourses();
-        model.addAttribute("courses",courses);
+
+
+        List<Student>stdsInAccBranch=new ArrayList<>();
+        for(Student s:students){
+            if(s.getBranch().equals(accBranch)){
+                stdsInAccBranch.add(s);
+            }
+        }
+
+        List<Course>coursesInAccBranch=new ArrayList<>();
+        for(Course course:courses){
+            if(course.getBranches().contains(accBranch)){
+                coursesInAccBranch.add(course);
+            }
+        }
+
+        List<Trainer>trainersInAccBranch=new ArrayList<>();
+        for(Trainer trainer:trainers){
+            if(trainer.getBranches().contains(accBranch))
+                trainersInAccBranch.add(trainer);
+        }
+
+        model.addAttribute("trainers",trainersInAccBranch);
+        model.addAttribute("allstds",stdsInAccBranch);
+        model.addAttribute("branch",accBranch);
+        model.addAttribute("courses",coursesInAccBranch);
 
         return "accountantpage";
     }
     @GetMapping("/accountant/course/delete/{cName}")
     public String deleteCourse(@PathVariable("cName")String courseName,Model model,RedirectAttributes rd){
-       /*if(userDetails==null)return "redirect:/login";*/
+
         List<Trainer>trainers=trainerServices.getAllTrainer();
         Course course=courseServices.getCourseByName(courseName);
         List<Branch>branchList=branchServices.getAllBranches();
         List<Student>studentList=studentServices.getAllStudents();
         for(Trainer t:trainers){
             if(t.getCourses().contains(course)==true){
+
                 course.removeTrainer(t);
             }
         }
@@ -321,6 +429,9 @@ public class accountantController {
         }
         for(Student s:studentList){
             if(s.getCourses().contains(course)){
+                double bal=s.getBalance()+course.getCourseSalary();
+                s.setBalance(bal);
+                Student ss=studentServices.addNewStudent(s);
                 course.removeStudent(s);
             }
         }

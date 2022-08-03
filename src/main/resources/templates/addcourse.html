@@ -42,7 +42,8 @@
 <ul >
     <li ><a th:href="@{/}">Home</a></li>
     <li ><a th:href="@{/student/register}">New Registration</a></li>
-    <li ><a th:href="@{/admin}">Administrator</a></li>
+    <li ><a th:href="@{/accountant}">Accountant</a></li>
+    <li sec:authorize="hasAuthority('ADMIN')" ><a th:href="@{/admin}">Administrator</a></li>
     <li ><a th:href="@{#}">Contact us</a></li>
     <li th:ref="navbar-item" sec:authorize="!isAuthenticated()">
         <a th:href="@{/login}">Login</a>
@@ -67,8 +68,8 @@
                 <input type="text" th:name="coursename" th:field="*{name}" placeholder="Course Name"><br>
                 <input type="text" th:field="*{courseDuration}" th:name="courseDuration" placeholder="Course Duration"><br>
                 <input type="text" th:field="*{courseSalary}" th:name="courseSalary" placeholder="Course Price"><br>
-                <label for="Branches">Choose Branch</label>
-                <select multiple id="Branches" th:name="branch">
+                <label for="Branches">Accountant Branch</label>
+                <select  id="Branches" th:name="branch">
                     <th:block th:each="b:${branches}">
                         <option th:value="${b.name}" th:name="brn" th:field="*{branches}">[[${b.name}]]</option>
                     </th:block>

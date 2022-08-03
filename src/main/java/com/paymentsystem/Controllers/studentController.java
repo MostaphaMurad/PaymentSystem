@@ -25,10 +25,7 @@ public class studentController {
     @Autowired private TrainerServices trainerServices;
     @GetMapping({"/student"})
     public String Home(Model model, @AuthenticationPrincipal MyUserDetails userDetails,RedirectAttributes rd ){
-        if(userDetails==null){
-            rd.addFlashAttribute("LoginFirst","Error You Have To Login First");
-            return "redirect:/login";
-        }
+
         String LogedEmail=userDetails.getEmailLoggedUser();
         Student LogedStudent=studentServices.getStudentByEmail(LogedEmail);
         Branch StudentBranch=LogedStudent.getBranch();
@@ -42,17 +39,33 @@ public class studentController {
         }
         model.addAttribute("foundCourses",found);
         model.addAttribute("enrolled",Enrolled);
+        model.addAttribute("std",LogedStudent);
         return "studenthome";
     }
+
     @PostMapping("/student/enroll")
-    public String EnrollStudentInCourses(@RequestParam("courses")Set<Course>courses,RedirectAttributes rd,@AuthenticationPrincipal MyUserDetails userDetails)
+    public String EnrollStudentInCourses(@RequestParam(value = "courses",required = false)Set<Course>courses,RedirectAttributes rd,@AuthenticationPrincipal MyUserDetails userDetails)
     {
         //System.out.println("from post doooog!! "+courses);
+        if(courses==null){
+            rd.addFlashAttribute("CantBeEmpty","select course please");
+            return "redirect:/student";
+        }
         String LogedEmail=userDetails.getEmailLoggedUser();
         Student LogedStudent=studentServices.getStudentByEmail(LogedEmail);
         Set<Course>alreadyHave= LogedStudent.getCourses();
         for(Course c:courses){
-            alreadyHave.add(c);
+            if(alreadyHave.contains(c)==false){
+                if(c.getCourseSalary()<=LogedStudent.getBalance()) {
+                    alreadyHave.add(c);
+                    double newBalance=LogedStudent.getBalance()-c.getCourseSalary();
+                    LogedStudent.setBalance(newBalance);
+                }
+                else{
+                    rd.addFlashAttribute("NoBalance","Sorry No Enought Balance");
+                    return "redirect:/student";
+                }
+            }
         }
         LogedStudent.setCourses(alreadyHave);
         boolean StudendEnrolled=studentServices.saveStudentWithEnrolledCourses(LogedStudent);
@@ -68,11 +81,13 @@ public class studentController {
     @GetMapping("/student/removecourse/{courseName}")
     public String removeCourseFromStudent(@PathVariable("courseName")String courseName,RedirectAttributes rd,@AuthenticationPrincipal MyUserDetails userDetails){
        Course course=courseServices.getCourseByName(courseName);
+       double coursePrice=course.getCourseSalary();
         String LogedEmail=userDetails.getEmailLoggedUser();
         Student LogedStudent=studentServices.getStudentByEmail(LogedEmail);
         Set<Course> LogedCourses=LogedStudent.getCourses();
         LogedCourses.remove(course);
         LogedStudent.setCourses(LogedCourses);
+        LogedStudent.setBalance(LogedStudent.getBalance()+coursePrice);
         boolean done=studentServices.saveStudentWithEnrolledCourses(LogedStudent);
         if(done){
             rd.addFlashAttribute("CourseRemoved","You Have Removed From Course");

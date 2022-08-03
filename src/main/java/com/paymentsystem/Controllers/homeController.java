@@ -2,8 +2,10 @@ package com.paymentsystem.Controllers;
 
 import com.paymentsystem.Models.Admin;
 import com.paymentsystem.Models.Branch;
+import com.paymentsystem.Models.Course;
 import com.paymentsystem.Security.MyUserDetails;
 import com.paymentsystem.Services.BranchServices;
+import com.paymentsystem.Services.CourseServices;
 import com.paymentsystem.Services.UserServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -21,8 +23,8 @@ import java.util.List;
 @RequestMapping({"/home","/"})
 public class homeController {
     @Autowired private BranchServices branchServices;
-    @Autowired
-    UserServices userServices;
+    @Autowired private UserServices userServices;
+    @Autowired private CourseServices courseServices;
     @RequestMapping("/")
     public String home(Model model,@AuthenticationPrincipal MyUserDetails userDetails){
         Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
@@ -33,6 +35,14 @@ public class homeController {
            }
             return "index";
         }
+    }
+    @GetMapping("/viewdetails")
+    public String viewDetails(Model model){
+        List<Branch>branches=branchServices.getAllBranches();
+        List<Course>courses=courseServices.getAllCourses();
+        model.addAttribute("courses",courses);
+        model.addAttribute("branches",branches);
+        return "viewdetails";
     }
     @GetMapping({"/login"})
     public String login(Model model,@AuthenticationPrincipal MyUserDetails userDetails){
